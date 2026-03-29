@@ -10,12 +10,26 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { background: linear-gradient(165deg, #0d0b09 0%, #1a1510 40%, #0d0b09 100%); min-height: 100vh; }
+
+:root {
+  --ink: #1a1a18;
+  --paper: #f6f3ed;
+  --cream: #ede8df;
+  --warm: #d4c9b5;
+  --accent: #c44b24;
+  --accent-light: #e8693f;
+  --forest: #2a5a3a;
+  --gold: #b8963e;
+  --muted: #8a8578;
+  --rule: rgba(26,26,24,0.12);
+}
+
+body { background: var(--paper); min-height: 100vh; }
 textarea, input, button { font-family: 'DM Sans', sans-serif; }
-::placeholder { color: rgba(255,255,255,0.2); }
+::placeholder { color: rgba(26,26,24,0.25); }
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(197,154,74,0.2); border-radius: 4px; }
+::-webkit-scrollbar-thumb { background: rgba(196,75,36,0.2); border-radius: 4px; }
 </style>
 </head>
 <body>
@@ -66,15 +80,15 @@ function FloatingLabel({ label, name, value, onChange, type="text", required, te
         style={{
           width:"100%", padding: textarea ? "24px 16px 10px" : "22px 16px 8px",
           fontSize:14.5, fontFamily:"'DM Sans', sans-serif",
-          border:`1.5px solid ${focused ? "#c59a4a" : "rgba(255,255,255,0.1)"}`,
-          borderRadius:10, background: focused ? "rgba(197,154,74,0.04)" : "rgba(255,255,255,0.03)",
-          color:"#f0ece4", outline:"none", transition:"all 0.3s",
+          border:`1.5px solid ${focused ? "#c44b24" : "rgba(26,26,24,0.15)"}`,
+          borderRadius:10, background: focused ? "rgba(196,75,36,0.03)" : "#fff",
+          color:"#1a1a18", outline:"none", transition:"all 0.3s",
           resize: textarea ? "vertical" : "none", minHeight: textarea ? 100 : "auto", boxSizing:"border-box",
         }}
       />
       <label style={{
         position:"absolute", left:16, top: active ? 5 : textarea ? 18 : 15,
-        fontSize: active ? 9.5 : 14.5, color: focused ? "#c59a4a" : "rgba(255,255,255,0.35)",
+        fontSize: active ? 9.5 : 14.5, color: focused ? "#c44b24" : "#8a8578",
         transition:"all 0.2s", pointerEvents:"none", fontFamily:"'DM Sans', sans-serif",
         fontWeight: active ? 600 : 400, letterSpacing: active ? "0.07em" : 0,
         textTransform: active ? "uppercase" : "none",
@@ -91,9 +105,9 @@ function ChipSelect({ options, selected, onToggle, multi=true }) {
         return (
           <button key={opt} onClick={() => onToggle(opt)} type="button" style={{
             padding:"9px 14px", borderRadius:8,
-            border:`1.5px solid ${isActive ? "#c59a4a" : "rgba(255,255,255,0.08)"}`,
-            background: isActive ? "rgba(197,154,74,0.12)" : "rgba(255,255,255,0.02)",
-            color: isActive ? "#e8d5a3" : "rgba(255,255,255,0.5)",
+            border:`1.5px solid ${isActive ? "#c44b24" : "rgba(26,26,24,0.15)"}`,
+            background: isActive ? "rgba(196,75,36,0.08)" : "#fff",
+            color: isActive ? "#c44b24" : "#8a8578",
             fontSize:12.5, fontFamily:"'DM Sans', sans-serif",
             fontWeight: isActive ? 600 : 400, textAlign:"left",
             cursor:"pointer", transition:"all 0.2s", lineHeight:1.35,
@@ -108,14 +122,14 @@ function ServiceCard({ item, active, onClick }) {
   return (
     <button onClick={onClick} type="button" style={{
       padding:"16px 18px", borderRadius:12, textAlign:"left",
-      border:`1.5px solid ${active ? "#c59a4a" : "rgba(255,255,255,0.07)"}`,
-      background: active ? "rgba(197,154,74,0.08)" : "rgba(255,255,255,0.015)",
+      border:`1.5px solid ${active ? "#c44b24" : "rgba(26,26,24,0.15)"}`,
+      background: active ? "rgba(196,75,36,0.05)" : "#fff",
       cursor:"pointer", transition:"all 0.25s", width:"100%",
     }}>
       <div style={{ fontSize:14.5, fontFamily:"'DM Sans', sans-serif", fontWeight: active ? 600 : 500,
-        color: active ? "#e8d5a3" : "rgba(255,255,255,0.6)", marginBottom:4,
+        color: active ? "#c44b24" : "#1a1a18", marginBottom:4,
       }}>{active ? "\u25CF " : "\u25CB "}{item.label}</div>
-      <div style={{ fontSize:12, fontFamily:"'DM Sans', sans-serif", color:"rgba(255,255,255,0.3)", lineHeight:1.5 }}>{item.desc}</div>
+      <div style={{ fontSize:12, fontFamily:"'DM Sans', sans-serif", color:"#8a8578", lineHeight:1.5 }}>{item.desc}</div>
     </button>
   );
 }
@@ -126,7 +140,7 @@ function ProgressBar({ current, total }) {
       {Array.from({ length: total }).map((_, i) => (
         <div key={i} style={{
           flex:1, height:2.5, borderRadius:2,
-          background: i <= current ? "linear-gradient(90deg, #c59a4a, #e8d5a3)" : "rgba(255,255,255,0.06)",
+          background: i <= current ? "linear-gradient(90deg, #c44b24, #e8693f)" : "rgba(26,26,24,0.12)",
           transition:"background 0.4s",
         }} />
       ))}
@@ -136,15 +150,15 @@ function ProgressBar({ current, total }) {
 
 function SectionLabel({ children }) {
   return <label style={{ fontFamily:"'DM Sans', sans-serif", fontSize:10, fontWeight:600,
-    color:"rgba(255,255,255,0.35)", letterSpacing:"0.08em", textTransform:"uppercase",
+    color:"#8a8578", letterSpacing:"0.08em", textTransform:"uppercase",
     display:"block", marginBottom:8, marginTop:6 }}>{children}</label>;
 }
 
 function SectionTitle({ children, sub }) {
   return (
     <div style={{ marginBottom:22 }}>
-      <h2 style={{ fontFamily:"'Playfair Display', serif", fontSize:26, fontWeight:700, color:"#f0ece4", margin:0, lineHeight:1.2 }}>{children}</h2>
-      {sub && <p style={{ fontFamily:"'DM Sans', sans-serif", fontSize:13.5, color:"rgba(255,255,255,0.4)", marginTop:8, lineHeight:1.6 }}>{sub}</p>}
+      <h2 style={{ fontFamily:"'Playfair Display', serif", fontSize:26, fontWeight:700, color:"#1a1a18", margin:0, lineHeight:1.2 }}>{children}</h2>
+      {sub && <p style={{ fontFamily:"'DM Sans', sans-serif", fontSize:13.5, color:"#8a8578", marginTop:8, lineHeight:1.6 }}>{sub}</p>}
     </div>
   );
 }
@@ -153,13 +167,13 @@ function ReviewBlock({ title, items }) {
   const filtered = items.filter(i => { if (!i.value) return false; if (Array.isArray(i.value) && i.value.length === 0) return false; return true; });
   if (filtered.length === 0) return null;
   return (
-    <div style={{ background:"rgba(255,255,255,0.02)", border:"1px solid rgba(255,255,255,0.05)", borderRadius:12, padding:"14px 18px", marginBottom:12 }}>
-      <div style={{ fontSize:9.5, fontWeight:600, color:"rgba(255,255,255,0.28)", letterSpacing:"0.09em", textTransform:"uppercase", fontFamily:"'DM Sans', sans-serif", marginBottom:6 }}>{title}</div>
+    <div style={{ background:"#fff", border:"1px solid rgba(26,26,24,0.1)", borderRadius:12, padding:"14px 18px", marginBottom:12 }}>
+      <div style={{ fontSize:9.5, fontWeight:600, color:"#8a8578", letterSpacing:"0.09em", textTransform:"uppercase", fontFamily:"'DM Sans', sans-serif", marginBottom:6 }}>{title}</div>
       {filtered.map((item, idx) => (
         <div key={idx} style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", padding:"8px 0",
-          borderBottom: idx < filtered.length - 1 ? "1px solid rgba(255,255,255,0.04)" : "none" }}>
-          <span style={{ color:"rgba(255,255,255,0.35)", fontSize:12.5, fontFamily:"'DM Sans', sans-serif", fontWeight:500, minWidth:100 }}>{item.label}</span>
-          <span style={{ color:"#e8d5a3", fontSize:12.5, fontFamily:"'DM Sans', sans-serif", textAlign:"right", maxWidth:"58%", wordBreak:"break-word", lineHeight:1.4 }}>
+          borderBottom: idx < filtered.length - 1 ? "1px solid rgba(26,26,24,0.08)" : "none" }}>
+          <span style={{ color:"#8a8578", fontSize:12.5, fontFamily:"'DM Sans', sans-serif", fontWeight:500, minWidth:100 }}>{item.label}</span>
+          <span style={{ color:"#1a1a18", fontSize:12.5, fontFamily:"'DM Sans', sans-serif", textAlign:"right", maxWidth:"58%", wordBreak:"break-word", lineHeight:1.4 }}>
             {Array.isArray(item.value) ? item.value.join(", ") : item.value}
           </span>
         </div>
@@ -231,26 +245,26 @@ function CoPackingIntake() {
     switch (step) {
       case 0: return (
         <div style={{ textAlign:"center", padding:"32px 0" }}>
-          <div style={{ width:64, height:64, borderRadius:16, background:"linear-gradient(135deg, #c59a4a 0%, #8b6914 100%)",
+          <div style={{ width:64, height:64, borderRadius:16, background:"#c44b24",
             display:"flex", alignItems:"center", justifyContent:"center", margin:"0 auto 20px", fontSize:28 }}>{"\u2697"}</div>
-          <h1 style={{ fontFamily:"'Playfair Display', serif", fontSize:32, fontWeight:700, color:"#f0ece4", margin:"0 0 10px", lineHeight:1.15 }}>Let's Build Your Product</h1>
-          <p style={{ fontFamily:"'DM Sans', sans-serif", fontSize:15, color:"rgba(255,255,255,0.45)", maxWidth:420, margin:"0 auto 8px", lineHeight:1.7 }}>
+          <h1 style={{ fontFamily:"'Playfair Display', serif", fontSize:32, fontWeight:700, color:"#1a1a18", margin:"0 0 10px", lineHeight:1.15 }}>Let's Build Your Product</h1>
+          <p style={{ fontFamily:"'DM Sans', sans-serif", fontSize:15, color:"#8a8578", maxWidth:420, margin:"0 auto 8px", lineHeight:1.7 }}>
             From concept to commercialization — share your vision and we'll craft a custom manufacturing plan with transparent pricing.
           </p>
-          <p style={{ fontFamily:"'DM Sans', sans-serif", fontSize:12.5, color:"rgba(255,255,255,0.25)", maxWidth:380, margin:"0 auto 32px", lineHeight:1.6 }}>
+          <p style={{ fontFamily:"'DM Sans', sans-serif", fontSize:12.5, color:"#8a8578", maxWidth:380, margin:"0 auto 32px", lineHeight:1.6 }}>
             Not sure about every detail? No problem — we'll figure it out together. Custom quotes delivered within 24–48 hours.
           </p>
           <div style={{ display:"grid", gridTemplateColumns:"repeat(4, 1fr)", gap:16, maxWidth:460, margin:"0 auto" }}>
             {[{icon:"🧪",l:"Custom Formulation"},{icon:"🏭",l:"Manufacturing"},{icon:"📦",l:"Packaging"},{icon:"💰",l:"Pricing & MOQ"}].map(s => (
               <div key={s.l} style={{ display:"flex", flexDirection:"column", alignItems:"center", gap:6 }}>
                 <div style={{ fontSize:22 }}>{s.icon}</div>
-                <span style={{ fontFamily:"'DM Sans', sans-serif", fontSize:10, color:"rgba(255,255,255,0.35)", letterSpacing:"0.06em", textTransform:"uppercase", fontWeight:500, textAlign:"center" }}>{s.l}</span>
+                <span style={{ fontFamily:"'DM Sans', sans-serif", fontSize:10, color:"#8a8578", letterSpacing:"0.06em", textTransform:"uppercase", fontWeight:500, textAlign:"center" }}>{s.l}</span>
               </div>
             ))}
           </div>
-          <div style={{ marginTop:36, padding:"14px 20px", borderRadius:10, background:"rgba(197,154,74,0.06)", border:"1px solid rgba(197,154,74,0.12)", maxWidth:400, margin:"36px auto 0" }}>
-            <div style={{ fontSize:11, color:"#c59a4a", fontFamily:"'DM Sans', sans-serif", fontWeight:600, letterSpacing:"0.05em", textTransform:"uppercase", marginBottom:4 }}>What to expect</div>
-            <div style={{ fontSize:12.5, color:"rgba(255,255,255,0.4)", fontFamily:"'DM Sans', sans-serif", lineHeight:1.6 }}>
+          <div style={{ marginTop:36, padding:"14px 20px", borderRadius:10, background:"rgba(196,75,36,0.05)", border:"1px solid rgba(196,75,36,0.15)", maxWidth:400, margin:"36px auto 0" }}>
+            <div style={{ fontSize:11, color:"#c44b24", fontFamily:"'DM Sans', sans-serif", fontWeight:600, letterSpacing:"0.05em", textTransform:"uppercase", marginBottom:4 }}>What to expect</div>
+            <div style={{ fontSize:12.5, color:"#8a8578", fontFamily:"'DM Sans', sans-serif", lineHeight:1.6 }}>
               Fill out your project details → We review & prepare your custom quote → Schedule a call to finalize → Production begins
             </div>
           </div>
@@ -300,17 +314,17 @@ function CoPackingIntake() {
         <SectionTitle sub="Help us understand your pricing goals so we can right-size your production plan.">Pricing & Budget</SectionTitle>
         <SectionLabel>Target Unit Cost (COGS per unit)</SectionLabel>
         <ChipSelect options={UNIT_PRICE_RANGES} selected={form.targetUnitPrice} onToggle={v => u("targetUnitPrice", v)} multi={false} />
-        <div style={{ padding:"10px 14px", borderRadius:8, background:"rgba(197,154,74,0.04)", border:"1px solid rgba(197,154,74,0.08)", marginBottom:18, marginTop:-4 }}>
-          <div style={{ fontSize:11.5, color:"rgba(255,255,255,0.35)", fontFamily:"'DM Sans', sans-serif", lineHeight:1.55 }}>
-            <span style={{ color:"#c59a4a", fontWeight:600 }}>Typical ranges:</span> Stock private label $4–$20/unit · Custom formulations $5–$30/unit · Includes bottling, seals, testing, and application. Labels, shipping, and marketing are additional.
+        <div style={{ padding:"10px 14px", borderRadius:8, background:"rgba(196,75,36,0.04)", border:"1px solid rgba(196,75,36,0.12)", marginBottom:18, marginTop:-4 }}>
+          <div style={{ fontSize:11.5, color:"#8a8578", fontFamily:"'DM Sans', sans-serif", lineHeight:1.55 }}>
+            <span style={{ color:"#c44b24", fontWeight:600 }}>Typical ranges:</span> Stock private label $4–$20/unit · Custom formulations $5–$30/unit · Includes bottling, seals, testing, and application. Labels, shipping, and marketing are additional.
           </div>
         </div>
         <SectionLabel>Total Project Budget (first production run)</SectionLabel>
         <ChipSelect options={BUDGET_RANGES} selected={form.totalBudget} onToggle={v => u("totalBudget", v)} multi={false} />
         <FloatingLabel label="MOQ Preference" name="moqPreference" value={form.moqPreference} onChange={e => u("moqPreference", e.target.value)} placeholder="e.g. 5,000 bottles, 300K pieces, open to recommendation" />
-        <div style={{ padding:"10px 14px", borderRadius:8, background:"rgba(255,255,255,0.02)", border:"1px solid rgba(255,255,255,0.06)", marginBottom:18, marginTop:-4 }}>
-          <div style={{ fontSize:11.5, color:"rgba(255,255,255,0.3)", fontFamily:"'DM Sans', sans-serif", lineHeight:1.55 }}>
-            <span style={{ color:"rgba(255,255,255,0.5)", fontWeight:600 }}>Typical MOQs:</span> Stock products: 2,500–5,000 bottles · Custom capsules/tablets: 150K–300K pcs · Custom gummies: 600K–1M pcs · Softgels: 300K pcs
+        <div style={{ padding:"10px 14px", borderRadius:8, background:"#fff", border:"1px solid rgba(26,26,24,0.1)", marginBottom:18, marginTop:-4 }}>
+          <div style={{ fontSize:11.5, color:"#8a8578", fontFamily:"'DM Sans', sans-serif", lineHeight:1.55 }}>
+            <span style={{ color:"#1a1a18", fontWeight:600 }}>Typical MOQs:</span> Stock products: 2,500–5,000 bottles · Custom capsules/tablets: 150K–300K pcs · Custom gummies: 600K–1M pcs · Softgels: 300K pcs
           </div>
         </div>
         <SectionLabel>Where will you sell? (sales channels)</SectionLabel>
@@ -331,9 +345,9 @@ function CoPackingIntake() {
         <ChipSelect options={VOLUME_RANGES} selected={form.volumeRange} onToggle={v => u("volumeRange", v)} multi={false} />
         <SectionLabel>Target Launch Date *</SectionLabel>
         <ChipSelect options={TIMELINE_OPTIONS} selected={form.timeline} onToggle={v => u("timeline", v)} multi={false} />
-        <div style={{ padding:"10px 14px", borderRadius:8, background:"rgba(255,255,255,0.02)", border:"1px solid rgba(255,255,255,0.06)", marginBottom:18, marginTop:-4 }}>
-          <div style={{ fontSize:11.5, color:"rgba(255,255,255,0.3)", fontFamily:"'DM Sans', sans-serif", lineHeight:1.55 }}>
-            <span style={{ color:"rgba(255,255,255,0.5)", fontWeight:600 }}>Typical lead times:</span> Stock products: 2–4 weeks from label receipt · Custom formulations: 8–12 weeks · Rush orders available with premium pricing
+        <div style={{ padding:"10px 14px", borderRadius:8, background:"#fff", border:"1px solid rgba(26,26,24,0.1)", marginBottom:18, marginTop:-4 }}>
+          <div style={{ fontSize:11.5, color:"#8a8578", fontFamily:"'DM Sans', sans-serif", lineHeight:1.55 }}>
+            <span style={{ color:"#1a1a18", fontWeight:600 }}>Typical lead times:</span> Stock products: 2–4 weeks from label receipt · Custom formulations: 8–12 weeks · Rush orders available with premium pricing
           </div>
         </div>
         <FloatingLabel label="Anything else about your timeline or scale?" name="additionalNotes" value={form.additionalNotes} onChange={e => u("additionalNotes", e.target.value)} textarea placeholder="e.g. Seasonal launch window, trade show deadline, retail buyer presentation date" />
@@ -375,9 +389,9 @@ function CoPackingIntake() {
           {label:"Services",value:form.additionalServices},{label:"Samples",value:form.sampleRequest},
         ]} />
         {(form.formulaDetails || form.packagingNotes || form.additionalNotes || form.brandStory) && (
-          <div style={{ marginTop:8, padding:"12px 16px", borderRadius:10, background:"rgba(197,154,74,0.04)", border:"1px solid rgba(197,154,74,0.08)" }}>
-            <div style={{ fontSize:9.5, fontWeight:600, color:"#c59a4a", letterSpacing:"0.08em", textTransform:"uppercase", fontFamily:"'DM Sans', sans-serif", marginBottom:4 }}>Notes included</div>
-            <div style={{ fontSize:12, color:"rgba(255,255,255,0.35)", fontFamily:"'DM Sans', sans-serif", lineHeight:1.5 }}>
+          <div style={{ marginTop:8, padding:"12px 16px", borderRadius:10, background:"rgba(196,75,36,0.04)", border:"1px solid rgba(196,75,36,0.12)" }}>
+            <div style={{ fontSize:9.5, fontWeight:600, color:"#c44b24", letterSpacing:"0.08em", textTransform:"uppercase", fontFamily:"'DM Sans', sans-serif", marginBottom:4 }}>Notes included</div>
+            <div style={{ fontSize:12, color:"#8a8578", fontFamily:"'DM Sans', sans-serif", lineHeight:1.5 }}>
               {[form.formulaDetails && "Formula details", form.packagingNotes && "Packaging notes", form.additionalNotes && "Timeline notes", form.brandStory && "Brand story"].filter(Boolean).join(" · ")}
             </div>
           </div>
@@ -389,56 +403,56 @@ function CoPackingIntake() {
 
   if (submitted) {
     return (
-      <div style={{ minHeight:"100vh", background:"linear-gradient(165deg, #0d0b09 0%, #1a1510 40%, #0d0b09 100%)",
+      <div style={{ minHeight:"100vh", background:"#f6f3ed",
         display:"flex", alignItems:"center", justifyContent:"center", fontFamily:"'DM Sans', sans-serif" }}>
         <div style={{ textAlign:"center", padding:40, maxWidth:460 }}>
-          <div style={{ width:72, height:72, borderRadius:"50%", background:"linear-gradient(135deg, #2a6b3f 0%, #1a4d2b 100%)",
-            display:"flex", alignItems:"center", justifyContent:"center", margin:"0 auto 20px", fontSize:32 }}>✓</div>
-          <h1 style={{ fontFamily:"'Playfair Display', serif", fontSize:30, fontWeight:700, color:"#f0ece4", margin:"0 0 10px" }}>Quote Request Submitted</h1>
-          <p style={{ color:"rgba(255,255,255,0.45)", fontSize:14.5, lineHeight:1.7, marginBottom:6 }}>
+          <div style={{ width:72, height:72, borderRadius:"50%", background:"linear-gradient(135deg, #2a5a3a 0%, #1a3d27 100%)",
+            display:"flex", alignItems:"center", justifyContent:"center", margin:"0 auto 20px", fontSize:32, color:"#fff" }}>✓</div>
+          <h1 style={{ fontFamily:"'Playfair Display', serif", fontSize:30, fontWeight:700, color:"#1a1a18", margin:"0 0 10px" }}>Quote Request Submitted</h1>
+          <p style={{ color:"#8a8578", fontSize:14.5, lineHeight:1.7, marginBottom:6 }}>
             Thank you, {form.fullName.split(" ")[0]}. Our team will review your project and prepare a detailed quote with pricing breakdown.
           </p>
-          <p style={{ color:"rgba(255,255,255,0.3)", fontSize:13, lineHeight:1.6 }}>
+          <p style={{ color:"#8a8578", fontSize:13, lineHeight:1.6 }}>
             Expect to hear from us within 24–48 business hours. We'll schedule a call to walk through your quote and discuss next steps.
           </p>
           <button onClick={() => { setSubmitted(false); setStep(0); setForm(emptyForm); }} style={{
-            marginTop:28, padding:"12px 24px", borderRadius:100, border:"1px solid rgba(255,255,255,0.1)",
-            background:"transparent", color:"rgba(255,255,255,0.4)", fontSize:13, fontFamily:"'DM Sans', sans-serif", cursor:"pointer" }}>Submit Another Project</button>
+            marginTop:28, padding:"12px 24px", borderRadius:100, border:"1px solid rgba(26,26,24,0.15)",
+            background:"transparent", color:"#8a8578", fontSize:13, fontFamily:"'DM Sans', sans-serif", cursor:"pointer" }}>Submit Another Project</button>
         </div>
       </div>
     );
   }
 
   return (
-    <div style={{ minHeight:"100vh", background:"linear-gradient(165deg, #0d0b09 0%, #1a1510 40%, #0d0b09 100%)",
+    <div style={{ minHeight:"100vh", background:"#f6f3ed",
       display:"flex", flexDirection:"column", alignItems:"center", fontFamily:"'DM Sans', sans-serif" }}>
       <div style={{ position:"fixed", top:0, left:0, right:0, height:2,
-        background:"linear-gradient(90deg, transparent, #c59a4a, transparent)", opacity:0.5, zIndex:100 }} />
+        background:"linear-gradient(90deg, transparent, #c44b24, transparent)", opacity:0.6, zIndex:100 }} />
       <header style={{ width:"100%", maxWidth:600, padding:"24px 20px 0", display:"flex", justifyContent:"space-between", alignItems:"center" }}>
         <div style={{ display:"flex", alignItems:"center", gap:10 }}>
-          <div style={{ width:30, height:30, borderRadius:8, background:"linear-gradient(135deg, #c59a4a, #8b6914)",
-            display:"flex", alignItems:"center", justifyContent:"center", fontSize:15, fontWeight:700, color:"#0d0b09" }}>⚗</div>
-          <span style={{ fontFamily:"'Playfair Display', serif", fontSize:15, fontWeight:600, color:"#f0ece4" }}>Project Intake</span>
+          <div style={{ width:30, height:30, borderRadius:8, background:"#c44b24",
+            display:"flex", alignItems:"center", justifyContent:"center", fontSize:15, fontWeight:700, color:"#fff" }}>⚗</div>
+          <span style={{ fontFamily:"'Playfair Display', serif", fontSize:15, fontWeight:600, color:"#1a1a18" }}>Project Intake</span>
         </div>
-        {step > 0 && <span style={{ fontSize:10.5, color:"rgba(255,255,255,0.25)", fontWeight:500, letterSpacing:"0.06em", textTransform:"uppercase" }}>Step {step} of {STEPS.length - 1}</span>}
+        {step > 0 && <span style={{ fontSize:10.5, color:"#8a8578", fontWeight:500, letterSpacing:"0.06em", textTransform:"uppercase" }}>Step {step} of {STEPS.length - 1}</span>}
       </header>
       <main ref={containerRef} style={{ width:"100%", maxWidth:600, padding:"16px 20px 130px", flex:1, overflowY:"auto" }}>
         {step > 0 && <ProgressBar current={step - 1} total={STEPS.length - 2} />}
         {renderStep()}
       </main>
-      <div style={{ position:"fixed", bottom:0, left:0, right:0, background:"linear-gradient(transparent, #0d0b09 30%)", padding:"28px 20px 22px", display:"flex", justifyContent:"center" }}>
+      <div style={{ position:"fixed", bottom:0, left:0, right:0, background:"linear-gradient(transparent, #f6f3ed 30%)", padding:"28px 20px 22px", display:"flex", justifyContent:"center" }}>
         <div style={{ width:"100%", maxWidth:600, display:"flex", gap:10 }}>
           {step > 0 && (
             <button onClick={() => setStep(s => s - 1)} style={{
-              padding:"13px 22px", borderRadius:100, border:"1px solid rgba(255,255,255,0.08)",
-              background:"rgba(255,255,255,0.02)", color:"rgba(255,255,255,0.4)", fontSize:13.5,
+              padding:"13px 22px", borderRadius:100, border:"1px solid rgba(26,26,24,0.15)",
+              background:"transparent", color:"#8a8578", fontSize:13.5,
               fontFamily:"'DM Sans', sans-serif", fontWeight:500, cursor:"pointer", transition:"all 0.2s" }}>← Back</button>
           )}
           <button onClick={() => { if (step === STEPS.length - 1) handleSubmit(); else setStep(s => s + 1); }}
             disabled={!canProceed()} style={{
               flex:1, padding:"13px 24px", borderRadius:100, border:"none",
-              background: canProceed() ? "linear-gradient(135deg, #c59a4a 0%, #a67c2e 100%)" : "rgba(255,255,255,0.05)",
-              color: canProceed() ? "#0d0b09" : "rgba(255,255,255,0.15)",
+              background: canProceed() ? "#c44b24" : "rgba(26,26,24,0.08)",
+              color: canProceed() ? "#fff" : "rgba(26,26,24,0.25)",
               fontSize:14.5, fontFamily:"'DM Sans', sans-serif", fontWeight:600,
               cursor: canProceed() ? "pointer" : "not-allowed", transition:"all 0.3s", letterSpacing:"0.02em" }}>
             {step === 0 ? "Get Started →" : step === STEPS.length - 1 ? "Submit Quote Request" : "Continue →"}
