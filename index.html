@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gummy Formulation Pros — From Idea to Shelf</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Satoshi:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --ink: #1a1a18;
+  --paper: #f6f3ed;
+  --cream: #ede8df;
+  --warm: #d4c9b5;
+  --accent: #c44b24;
+  --accent-light: #e8693f;
+  --forest: #2a5a3a;
+  --forest-light: #3a7a4f;
+  --gold: #b8963e;
+  --muted: #8a8578;
+  --rule: rgba(26,26,24,0.12);
+  --serif: 'Instrument Serif', Georgia, serif;
+  --sans: 'Satoshi', -apple-system, sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--sans);
+  background: var(--paper);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* === UTILITY === */
+.container { max-width: 1200px; margin: 0 auto; padding: 0 32px; }
+.rule { border: none; border-top: 1px solid var(--rule); margin: 0; }
+
+/* === ANIMATIONS === */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-40px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.92); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-up { animation: fadeUp 0.8s ease-out both; }
+.animate-in { animation: fadeIn 0.6s ease-out both; }
+.delay-1 { animation-delay: 0.1s; }
+.delay-2 { animation-delay: 0.2s; }
+.delay-3 { animation-delay: 0.3s; }
+.delay-4 { animation-delay: 0.4s; }
+.delay-5 { animation-delay: 0.5s; }
+.delay-6 { animation-delay: 0.6s; }
+.delay-7 { animation-delay: 0.7s; }
+
+/* === NAV === */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: rgba(246,243,237,0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--rule);
+}
+.nav-inner {
+  max-width: 1200px; margin: 0 auto; padding: 0 32px;
+  display: flex; justify-content: space-between; align-items: center;
+  height: 64px;
+}
+.nav-logo {
+  font-family: var(--serif); font-size: 20px; color: var(--ink);
+  text-decoration: none; letter-spacing: -0.02em;
+}
+.nav-logo em { color: var(--accent); font-style: italic; }
+.nav-links { display: flex; gap: 32px; align-items: center; }
+.nav-links a {
+  font-size: 13px; font-weight: 500; color: var(--muted);
+  text-decoration: none; letter-spacing: 0.03em;
+  text-transform: uppercase; transition: color 0.3s;
+}
+.nav-links a:hover { color: var(--ink); }
+.nav-cta {
+  background: var(--ink) !important; color: var(--paper) !important;
+  padding: 10px 24px !important; border-radius: 100px;
+  font-size: 13px !important; font-weight: 600 !important;
+  letter-spacing: 0.02em !important; text-transform: none !important;
+  transition: background 0.3s !important;
+}
+.nav-cta:hover { background: var(--accent) !important; }
+
+/* === HERO === */
+.hero {
+  padding: 140px 0 80px;
+  position: relative;
+}
+.hero-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 64px;
+  align-items: center;
+}
+.hero-eyebrow {
+  font-size: 11px; font-weight: 600; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--accent);
+  margin-bottom: 20px;
+  display: flex; align-items: center; gap: 12px;
+}
+.hero-eyebrow::before {
+  content: ''; width: 32px; height: 1.5px; background: var(--accent);
+}
+.hero h1 {
+  font-family: var(--serif); font-size: 64px; line-height: 1.05;
+  letter-spacing: -0.03em; color: var(--ink); margin-bottom: 24px;
+  font-weight: 400;
+}
+.hero h1 em { font-style: italic; color: var(--accent); }
+.hero-sub {
+  font-size: 18px; line-height: 1.65; color: var(--muted);
+  max-width: 460px; margin-bottom: 36px; font-weight: 400;
+}
+.hero-cta {
+  display: inline-flex; align-items: center; gap: 12px;
+  background: var(--accent); color: #fff;
+  padding: 16px 36px; border-radius: 100px;
+  font-size: 16px; font-weight: 600; text-decoration: none;
+  transition: all 0.35s; letter-spacing: 0.01em;
+  border: none; cursor: pointer;
+}
+.hero-cta:hover { background: var(--accent-light); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(196,75,36,0.25); }
+.hero-cta svg { transition: transform 0.3s; }
+.hero-cta:hover svg { transform: translateX(4px); }
+.hero-trust {
+  display: flex; gap: 28px; margin-top: 40px;
+  padding-top: 28px; border-top: 1px solid var(--rule);
+}
+.hero-trust-item {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 13px; color: var(--muted); font-weight: 500;
+}
+.hero-trust-icon {
+  width: 20px; height: 20px; border-radius: 50%;
+  background: var(--forest); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; flex-shrink: 0;
+}
+.hero-visual {
+  position: relative; border-radius: 16px; overflow: hidden;
+  aspect-ratio: 4/5; background: var(--cream);
+  border: 1px solid var(--rule);
+}
+.hero-visual-inner {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 48px; text-align: center;
+}
+.hero-visual-icon { font-size: 72px; margin-bottom: 24px; filter: grayscale(0.1); }
+.hero-visual-text {
+  font-family: var(--serif); font-size: 22px; font-style: italic;
+  color: var(--muted); line-height: 1.5;
+}
+.hero-visual-tag {
+  position: absolute; bottom: 20px; left: 20px; right: 20px;
+  background: var(--ink); color: var(--paper);
+  padding: 14px 18px; border-radius: 10px;
+  font-size: 12px; font-weight: 500; letter-spacing: 0.04em;
+  text-transform: uppercase; text-align: center;
+}
+
+/* === MARQUEE === */
+.marquee-section {
+  padding: 28px 0;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  overflow: hidden;
+}
+.marquee-track {
+  display: flex; gap: 48px; white-space: nowrap;
+  animation: marquee 25s linear infinite;
+  width: max-content;
+}
+.marquee-item {
+  font-family: var(--serif); font-size: 18px; color: var(--warm);
+  font-style: italic; display: flex; align-items: center; gap: 48px;
+}
+.marquee-item::after {
+  content: '◆'; font-size: 6px; color: var(--warm); font-style: normal;
+}
+
+/* === HOW IT WORKS === */
+.how-section { padding: 100px 0; }
+.section-header { text-align: center; margin-bottom: 64px; }
+.section-eyebrow {
+  font-size: 11px; font-weight: 600; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--accent); margin-bottom: 16px;
+}
+.section-title {
+  font-family: var(--serif); font-size: 48px; line-height: 1.1;
+  letter-spacing: -0.02em; font-weight: 400;
+}
+.section-title em { font-style: italic; }
+.section-sub {
+  font-size: 17px; color: var(--muted); margin-top: 16px;
+  max-width: 520px; margin-left: auto; margin-right: auto; line-height: 1.6;
+}
+.steps-grid {
+  display: grid; grid-template-columns: repeat(5, 1fr); gap: 0;
+  position: relative;
+}
+.steps-grid::before {
+  content: ''; position: absolute; top: 48px;
+  left: 10%; right: 10%; height: 1px;
+  background: repeating-linear-gradient(90deg, var(--warm) 0, var(--warm) 8px, transparent 8px, transparent 16px);
+}
+.step-card { text-align: center; padding: 0 16px; position: relative; }
+.step-number {
+  width: 96px; height: 96px; border-radius: 50%;
+  background: var(--cream); border: 2px solid var(--rule);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 20px; font-size: 36px;
+  position: relative; z-index: 2;
+  transition: all 0.4s;
+}
+.step-card:hover .step-number {
+  background: var(--forest); border-color: var(--forest);
+  transform: scale(1.08);
+}
+.step-card:hover .step-number .step-emoji { filter: brightness(1.2); }
+.step-label {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--accent); margin-bottom: 8px;
+}
+.step-title {
+  font-family: var(--serif); font-size: 20px; margin-bottom: 8px;
+  font-weight: 400;
+}
+.step-desc {
+  font-size: 13.5px; color: var(--muted); line-height: 1.55;
+}
+
+/* === VALUE PROPS === */
+.value-section {
+  padding: 100px 0;
+  background: var(--ink); color: var(--paper);
+}
+.value-section .section-eyebrow { color: var(--gold); }
+.value-section .section-sub { color: rgba(246,243,237,0.5); }
+.value-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px;
+  margin-top: 64px;
+}
+.value-card {
+  padding: 36px 32px; border-radius: 16px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.06);
+  transition: all 0.4s;
+}
+.value-card:hover {
+  background: rgba(255,255,255,0.07);
+  transform: translateY(-4px);
+  border-color: rgba(255,255,255,0.1);
+}
+.value-icon {
+  width: 48px; height: 48px; border-radius: 12px;
+  background: rgba(184,150,62,0.15);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; margin-bottom: 20px;
+}
+.value-card h3 {
+  font-family: var(--serif); font-size: 22px; font-weight: 400;
+  margin-bottom: 10px; color: var(--paper);
+}
+.value-card p {
+  font-size: 14.5px; line-height: 1.6; color: rgba(246,243,237,0.5);
+}
+
+/* === TRANSPARENCY === */
+.transparency-section { padding: 100px 0; }
+.transp-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 48px;
+  margin-top: 56px;
+}
+.transp-card {
+  padding: 48px 40px; border-radius: 20px;
+  border: 1px solid var(--rule);
+  background: #fff;
+  position: relative; overflow: hidden;
+}
+.transp-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0;
+  height: 4px;
+}
+.transp-card.pricing::before { background: var(--accent); }
+.transp-card.timeline::before { background: var(--forest); }
+.transp-card-icon {
+  width: 56px; height: 56px; border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26px; margin-bottom: 24px;
+}
+.transp-card.pricing .transp-card-icon { background: rgba(196,75,36,0.1); }
+.transp-card.timeline .transp-card-icon { background: rgba(42,90,58,0.1); }
+.transp-card h3 {
+  font-family: var(--serif); font-size: 28px; font-weight: 400;
+  margin-bottom: 12px; letter-spacing: -0.01em;
+}
+.transp-card .quote-text {
+  font-family: var(--serif); font-size: 20px; font-style: italic;
+  color: var(--muted); margin-bottom: 20px; line-height: 1.4;
+}
+.transp-list { list-style: none; }
+.transp-list li {
+  padding: 12px 0; border-bottom: 1px solid var(--rule);
+  font-size: 14.5px; color: var(--ink);
+  display: flex; align-items: flex-start; gap: 12px;
+  line-height: 1.5;
+}
+.transp-list li:last-child { border-bottom: none; }
+.transp-check {
+  width: 20px; height: 20px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; color: #fff; flex-shrink: 0; margin-top: 1px;
+}
+.pricing .transp-check { background: var(--accent); }
+.timeline .transp-check { background: var(--forest); }
+
+/* === SOCIAL PROOF === */
+.proof-section {
+  padding: 100px 0;
+  background: var(--cream);
+}
+.stats-row {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px;
+  margin-bottom: 72px;
+}
+.stat-card { text-align: center; }
+.stat-number {
+  font-family: var(--serif); font-size: 56px; color: var(--ink);
+  line-height: 1; margin-bottom: 8px; letter-spacing: -0.03em;
+}
+.stat-label { font-size: 13px; color: var(--muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; }
+.testimonials-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+}
+.testimonial-card {
+  background: #fff; border-radius: 16px; padding: 32px;
+  border: 1px solid var(--rule);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.testimonial-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.06); }
+.testimonial-stars { color: var(--gold); font-size: 14px; margin-bottom: 16px; letter-spacing: 2px; }
+.testimonial-text {
+  font-size: 15px; line-height: 1.65; color: var(--ink);
+  margin-bottom: 20px; font-style: italic;
+}
+.testimonial-author { display: flex; align-items: center; gap: 12px; }
+.testimonial-avatar {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: var(--cream); display: flex; align-items: center;
+  justify-content: center; font-size: 16px; font-weight: 600;
+  color: var(--muted);
+}
+.testimonial-name { font-size: 14px; font-weight: 600; color: var(--ink); }
+.testimonial-role { font-size: 12px; color: var(--muted); }
+
+/* === FEATURES === */
+.features-section { padding: 100px 0; }
+.feature-row {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 64px;
+  align-items: center; margin-bottom: 80px;
+}
+.feature-row:last-child { margin-bottom: 0; }
+.feature-row.reversed .feature-visual { order: -1; }
+.feature-visual {
+  aspect-ratio: 4/3; border-radius: 20px;
+  background: var(--cream); border: 1px solid var(--rule);
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; padding: 40px; text-align: center;
+  overflow: hidden; position: relative;
+}
+.feature-visual-icon { font-size: 56px; margin-bottom: 16px; }
+.feature-visual-label {
+  font-size: 12px; font-weight: 600; color: var(--muted);
+  letter-spacing: 0.08em; text-transform: uppercase;
+}
+.feature-eyebrow {
+  font-size: 11px; font-weight: 600; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--forest); margin-bottom: 12px;
+}
+.feature-title {
+  font-family: var(--serif); font-size: 36px; line-height: 1.15;
+  font-weight: 400; margin-bottom: 16px; letter-spacing: -0.01em;
+}
+.feature-desc {
+  font-size: 16px; line-height: 1.65; color: var(--muted);
+  margin-bottom: 24px;
+}
+.feature-list { list-style: none; }
+.feature-list li {
+  padding: 8px 0; font-size: 14.5px; color: var(--ink);
+  display: flex; align-items: center; gap: 10px;
+}
+.feature-list li::before {
+  content: '→'; color: var(--accent); font-weight: 600;
+}
+
+/* === FINAL CTA === */
+.final-cta-section {
+  padding: 120px 0;
+  background: var(--ink); color: var(--paper);
+  text-align: center; position: relative; overflow: hidden;
+}
+.final-cta-section::before {
+  content: ''; position: absolute; top: -200px; left: 50%;
+  transform: translateX(-50%);
+  width: 600px; height: 600px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(196,75,36,0.12) 0%, transparent 70%);
+}
+.final-cta-eyebrow {
+  font-size: 11px; font-weight: 600; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--gold); margin-bottom: 24px;
+  position: relative;
+}
+.final-cta-title {
+  font-family: var(--serif); font-size: 56px; line-height: 1.1;
+  font-weight: 400; max-width: 700px; margin: 0 auto 20px;
+  letter-spacing: -0.02em; position: relative;
+}
+.final-cta-title em { font-style: italic; color: var(--accent-light); }
+.final-cta-sub {
+  font-size: 18px; color: rgba(246,243,237,0.5);
+  max-width: 480px; margin: 0 auto 40px; line-height: 1.6;
+  position: relative;
+}
+.final-cta-btn {
+  display: inline-flex; align-items: center; gap: 12px;
+  background: var(--accent); color: #fff;
+  padding: 18px 44px; border-radius: 100px;
+  font-size: 17px; font-weight: 600; text-decoration: none;
+  transition: all 0.35s; border: none; cursor: pointer;
+  position: relative;
+}
+.final-cta-btn:hover { background: var(--accent-light); transform: translateY(-2px); box-shadow: 0 12px 40px rgba(196,75,36,0.3); }
+.final-cta-trust {
+  margin-top: 36px; display: flex; justify-content: center; gap: 32px;
+  position: relative;
+}
+.final-cta-trust span {
+  font-size: 13px; color: rgba(246,243,237,0.35); font-weight: 500;
+}
+
+/* === FOOTER === */
+.footer {
+  padding: 48px 0;
+  background: var(--ink);
+  border-top: 1px solid rgba(255,255,255,0.06);
+  color: rgba(246,243,237,0.35);
+}
+.footer-inner {
+  display: flex; justify-content: space-between; align-items: center;
+}
+.footer-logo {
+  font-family: var(--serif); font-size: 18px; color: var(--paper);
+}
+.footer-logo em { color: var(--accent); font-style: italic; }
+.footer-links { display: flex; gap: 24px; }
+.footer-links a {
+  font-size: 13px; color: rgba(246,243,237,0.35);
+  text-decoration: none; transition: color 0.3s;
+}
+.footer-links a:hover { color: var(--paper); }
+.footer-copy { font-size: 12px; }
+
+/* === RESPONSIVE === */
+@media (max-width: 900px) {
+  .hero-grid, .transp-grid, .feature-row { grid-template-columns: 1fr; gap: 40px; }
+  .hero h1 { font-size: 42px; }
+  .section-title { font-size: 36px; }
+  .steps-grid { grid-template-columns: repeat(2, 1fr); gap: 32px; }
+  .steps-grid::before { display: none; }
+  .value-grid, .testimonials-grid { grid-template-columns: 1fr; }
+  .stats-row { grid-template-columns: repeat(2, 1fr); }
+  .hero-visual { display: none; }
+  .feature-row.reversed .feature-visual { order: 0; }
+  .nav-links a:not(.nav-cta) { display: none; }
+  .hero-trust { flex-wrap: wrap; gap: 16px; }
+  .final-cta-title { font-size: 38px; }
+  .final-cta-trust { flex-wrap: wrap; justify-content: center; }
+  .footer-inner { flex-direction: column; gap: 16px; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">Gummy Formulation <em>Pros</em></a>
+    <div class="nav-links">
+      <a href="#how">Process</a>
+      <a href="#why">Why Us</a>
+      <a href="#transparency">Pricing</a>
+      <a href="#features">Services</a>
+      <a href="#quote" class="nav-cta">Get Your Quote</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-eyebrow animate-up">Supplement Product Development</div>
+        <h1 class="animate-up delay-1">Your gummy idea,<br><em>commercially ready.</em></h1>
+        <p class="hero-sub animate-up delay-2">We take your supplement concept from napkin sketch to finished product — with food scientists who've done it hundreds of times, transparent pricing, and timelines you can actually count on.</p>
+        <a href="#quote" class="hero-cta animate-up delay-3">
+          Get Your Quote
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <div class="hero-trust animate-up delay-4">
+          <div class="hero-trust-item">
+            <div class="hero-trust-icon">✓</div>
+            Transparent pricing
+          </div>
+          <div class="hero-trust-item">
+            <div class="hero-trust-icon">✓</div>
+            Clear timelines
+          </div>
+          <div class="hero-trust-item">
+            <div class="hero-trust-icon">✓</div>
+            cGMP compliant
+          </div>
+          <div class="hero-trust-item">
+            <div class="hero-trust-icon">✓</div>
+            Full R&D team
+          </div>
+        </div>
+      </div>
+      <div class="hero-visual animate-up delay-3">
+        <div class="hero-visual-inner">
+          <div class="hero-visual-icon">🧪</div>
+          <div class="hero-visual-text">"From formulation<br>to the shelf"</div>
+        </div>
+        <div class="hero-visual-tag">[ Image: Product lineup — gummy bottles, lab work, packaging ]</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-section">
+  <div class="marquee-track">
+    <span class="marquee-item">Gummy Vitamins</span>
+    <span class="marquee-item">Functional Candy</span>
+    <span class="marquee-item">Protein Gummies</span>
+    <span class="marquee-item">Supplement Bars</span>
+    <span class="marquee-item">Nutraceuticals</span>
+    <span class="marquee-item">Custom Formulations</span>
+    <span class="marquee-item">Private Label</span>
+    <span class="marquee-item">Pectin-Based</span>
+    <span class="marquee-item">Sugar-Free</span>
+    <span class="marquee-item">Gummy Vitamins</span>
+    <span class="marquee-item">Functional Candy</span>
+    <span class="marquee-item">Protein Gummies</span>
+    <span class="marquee-item">Supplement Bars</span>
+    <span class="marquee-item">Nutraceuticals</span>
+    <span class="marquee-item">Custom Formulations</span>
+    <span class="marquee-item">Private Label</span>
+    <span class="marquee-item">Pectin-Based</span>
+    <span class="marquee-item">Sugar-Free</span>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<section class="how-section" id="how">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-eyebrow">Our Process</div>
+      <h2 class="section-title">Five steps from <em>idea to shelf</em></h2>
+      <p class="section-sub">We've refined this process over hundreds of product launches. Every step has a clear deliverable, a timeline, and a price — before you commit.</p>
+    </div>
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-number"><span class="step-emoji">💡</span></div>
+        <div class="step-label">Step 01</div>
+        <div class="step-title">Ideation</div>
+        <div class="step-desc">Define your concept, target consumer, and goals. We assess feasibility and map the path forward.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-number"><span class="step-emoji">🧬</span></div>
+        <div class="step-label">Step 02</div>
+        <div class="step-title">Development</div>
+        <div class="step-desc">Our food scientists formulate your product — optimizing for taste, stability, dosage, and compliance.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-number"><span class="step-emoji">✅</span></div>
+        <div class="step-label">Step 03</div>
+        <div class="step-title">Prototype</div>
+        <div class="step-desc">Sample rounds until you're 100% satisfied. We send flavor profiles and prototypes for your approval.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-number"><span class="step-emoji">📋</span></div>
+        <div class="step-label">Step 04</div>
+        <div class="step-title">Documentation</div>
+        <div class="step-desc">Complete spec sheets, COAs, regulatory documents, and label compliance — everything you need for retail.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-number"><span class="step-emoji">🚀</span></div>
+        <div class="step-label">Step 05</div>
+        <div class="step-title">Commercialize</div>
+        <div class="step-desc">Full production run, packaging, quality testing, and delivery. Your product is shelf-ready.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="rule container">
+
+<!-- VALUE PROPS -->
+<section class="value-section" id="why">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-eyebrow">Why Gummy Formulation Pros</div>
+      <h2 class="section-title" style="color: var(--paper)">Built for brands that<br><em>refuse to cut corners</em></h2>
+      <p class="section-sub">We're not a generic contract manufacturer. We're food scientists and product developers who obsess over getting your formulation right.</p>
+    </div>
+    <div class="value-grid">
+      <div class="value-card">
+        <div class="value-icon">🔬</div>
+        <h3>Food Scientists on Staff</h3>
+        <p>Degreed food scientists with decades of formulation experience in confectionery and nutraceuticals. Not salespeople — scientists.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">⚡</div>
+        <h3>Speed Without Shortcuts</h3>
+        <p>Our streamlined process gets you to market faster without sacrificing quality. Clear milestones, no bottlenecks, no wasted weeks.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">🔄</div>
+        <h3>True End-to-End</h3>
+        <p>From initial concept through R&D, prototyping, regulatory, production, and packaging — one team, one process, one point of contact.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">📊</div>
+        <h3>Transparent by Default</h3>
+        <p>Every project gets a detailed cost breakdown and timeline upfront. No hidden fees, no vague estimates. You know exactly what you're paying for.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">🎯</div>
+        <h3>Formulation Expertise</h3>
+        <p>Years of process improvement means we've solved the hard problems — active stability, flavor masking, texture optimization, Prop 65 compliance.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">🤝</div>
+        <h3>Built for Founders</h3>
+        <p>Whether you're a first-time brand or scaling an existing line, we guide you through every decision with patience and clarity.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRANSPARENCY -->
+<section class="transparency-section" id="transparency">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-eyebrow">Our Promise</div>
+      <h2 class="section-title">No surprises.<br><em>No delays.</em></h2>
+      <p class="section-sub">The two biggest frustrations in supplement manufacturing are hidden costs and missed deadlines. We've eliminated both.</p>
+    </div>
+    <div class="transp-grid">
+      <div class="transp-card pricing">
+        <div class="transp-card-icon">💰</div>
+        <h3>Know Your Costs<br>Before You Start</h3>
+        <div class="quote-text">"What will this actually cost me?"</div>
+        <ul class="transp-list">
+          <li><div class="transp-check">✓</div>Detailed line-item quote before any work begins</li>
+          <li><div class="transp-check">✓</div>R&D, formulation, prototyping, and production costs — all broken out</li>
+          <li><div class="transp-check">✓</div>No hidden fees for revisions, consultations, or spec changes</li>
+          <li><div class="transp-check">✓</div>Volume-based pricing tiers so you can plan for growth</li>
+          <li><div class="transp-check">✓</div>Raw material costs locked at quote — no surprise markups</li>
+        </ul>
+      </div>
+      <div class="transp-card timeline">
+        <div class="transp-card-icon">📅</div>
+        <h3>Know Your Timeline<br>Before You Commit</h3>
+        <div class="quote-text">"When will my product be ready?"</div>
+        <ul class="transp-list">
+          <li><div class="transp-check">✓</div>Step-by-step timeline with specific milestone dates</li>
+          <li><div class="transp-check">✓</div>Real-time project status updates at every phase</li>
+          <li><div class="transp-check">✓</div>Prototype sampling turnaround clearly communicated</li>
+          <li><div class="transp-check">✓</div>Production scheduling confirmed before you approve</li>
+          <li><div class="transp-check">✓</div>Rush options available with transparent premium pricing</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOCIAL PROOF -->
+<section class="proof-section" id="proof">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-eyebrow">Track Record</div>
+      <h2 class="section-title">Numbers that <em>speak for themselves</em></h2>
+    </div>
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-number">200+</div>
+        <div class="stat-label">Products Launched</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">15+</div>
+        <div class="stat-label">Years Experience</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">98%</div>
+        <div class="stat-label">On-Time Delivery</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">50+</div>
+        <div class="stat-label">Active Brand Partners</div>
+      </div>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <div class="testimonial-text">"They quoted us a price and a timeline — and they hit both. That's unheard of in this industry. Our protein gummies went from concept to Amazon in 14 weeks."</div>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">JR</div>
+          <div>
+            <div class="testimonial-name">Jason R.</div>
+            <div class="testimonial-role">Founder, DTC Supplement Brand</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <div class="testimonial-text">"Their food scientists solved a flavor masking problem two other manufacturers couldn't crack. The final gummy tastes like candy, not vitamins."</div>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">ML</div>
+          <div>
+            <div class="testimonial-name">Maria L.</div>
+            <div class="testimonial-role">VP Product, Health & Wellness Co.</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <div class="testimonial-text">"First-time brand founder here. They walked me through every single decision — formulation, compliance, packaging. I never felt lost or pressured."</div>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">DK</div>
+          <div>
+            <div class="testimonial-name">Derek K.</div>
+            <div class="testimonial-role">Founder, Functional Candy Startup</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features-section" id="features">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-eyebrow">What's Included</div>
+      <h2 class="section-title">Everything handled.<br><em>Nothing overlooked.</em></h2>
+      <p class="section-sub">You focus on building your brand. We handle the science, the compliance, and the production.</p>
+    </div>
+
+    <div class="feature-row">
+      <div>
+        <div class="feature-eyebrow">Formulation & R&D</div>
+        <div class="feature-title">Science-backed formulations designed to perform</div>
+        <div class="feature-desc">Our food scientists develop your formula from the ground up — balancing active efficacy with consumer-grade taste and texture that people actually enjoy taking.</div>
+        <ul class="feature-list">
+          <li>Custom active ingredient blending and dosage optimization</li>
+          <li>Flavor profiling and masking for challenging ingredients</li>
+          <li>Stability testing and shelf-life validation</li>
+          <li>Multiple prototype rounds until you approve</li>
+        </ul>
+      </div>
+      <div class="feature-visual">
+        <div class="feature-visual-icon">🧪</div>
+        <div class="feature-visual-label">[ Image: Lab environment, scientists formulating ]</div>
+      </div>
+    </div>
+
+    <div class="feature-row reversed">
+      <div>
+        <div class="feature-eyebrow">Regulatory & Compliance</div>
+        <div class="feature-title">Retail-ready documentation, done right</div>
+        <div class="feature-desc">From FDA compliance to Prop 65 to international certifications — we prepare every document your product needs to ship and sell with confidence.</div>
+        <ul class="feature-list">
+          <li>Supplement Facts panel and label compliance review</li>
+          <li>Certificate of Analysis (COA) for every production lot</li>
+          <li>Third-party testing coordination</li>
+          <li>NSF, Organic, Non-GMO, Kosher, Halal certification support</li>
+        </ul>
+      </div>
+      <div class="feature-visual">
+        <div class="feature-visual-icon">📋</div>
+        <div class="feature-visual-label">[ Image: Documentation, compliance paperwork, COA samples ]</div>
+      </div>
+    </div>
+
+    <div class="feature-row">
+      <div>
+        <div class="feature-eyebrow">Production & Packaging</div>
+        <div class="feature-title">From approved formula to finished product</div>
+        <div class="feature-desc">cGMP-compliant production runs with full quality assurance. We handle manufacturing, packaging, labeling, and delivery — you receive shelf-ready product.</div>
+        <ul class="feature-list">
+          <li>Scalable production from pilot runs to enterprise volume</li>
+          <li>Bottles, pouches, blister packs, and custom packaging</li>
+          <li>Label design support and print-ready artwork review</li>
+          <li>Warehousing and fulfillment partnerships available</li>
+        </ul>
+      </div>
+      <div class="feature-visual">
+        <div class="feature-visual-icon">🏭</div>
+        <div class="feature-visual-label">[ Image: Production line, packaging, finished bottles ]</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final-cta-section" id="quote">
+  <div class="container">
+    <div class="final-cta-eyebrow">Ready to Start?</div>
+    <h2 class="final-cta-title">Your product deserves<br><em>better than guesswork</em></h2>
+    <p class="final-cta-sub">Tell us about your project and get a transparent quote with clear pricing and a real timeline — within 48 hours.</p>
+    <a href="#" class="final-cta-btn" id="final-cta-link">
+      Get Your Quote
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+    <div class="final-cta-trust">
+      <span>✦ No commitment required</span>
+      <span>✦ Response within 48 hours</span>
+      <span>✦ Transparent pricing included</span>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-logo">Gummy Formulation <em>Pros</em></div>
+      <div class="footer-links">
+        <a href="#how">Process</a>
+        <a href="#why">Why Us</a>
+        <a href="#transparency">Pricing</a>
+        <a href="#features">Services</a>
+        <a href="#quote">Get a Quote</a>
+      </div>
+      <div class="footer-copy">© 2026 Gummy Formulation Pros. All rights reserved.</div>
+    </div>
+  </div>
+</footer>
+
+<!-- SCROLL REVEAL -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const observerOptions = { threshold: 0.12, rootMargin: '0px 0px -40px 0px' };
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+        observer.unobserve(entry.target);
+      }
+    });
+  }, observerOptions);
+
+  const revealElements = document.querySelectorAll(
+    '.step-card, .value-card, .transp-card, .stat-card, .testimonial-card, .feature-row > *, .section-header'
+  );
+  revealElements.forEach((el, i) => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(24px)';
+    el.style.transition = `opacity 0.6s ease ${i % 5 * 0.08}s, transform 0.6s ease ${i % 5 * 0.08}s`;
+    observer.observe(el);
+  });
+
+  // Smooth scroll for anchor links
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+});
+</script>
+
+</body>
+</html>
