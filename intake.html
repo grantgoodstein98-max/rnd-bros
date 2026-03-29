@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Co-Packing Project Intake</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: linear-gradient(165deg, #0d0b09 0%, #1a1510 40%, #0d0b09 100%); min-height: 100vh; }
+textarea, input, button { font-family: 'DM Sans', sans-serif; }
+::placeholder { color: rgba(255,255,255,0.2); }
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(197,154,74,0.2); border-radius: 4px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect, useRef } = React;
+
+const STEPS = [
+  { id: "welcome", label: "Welcome" },
+  { id: "contact", label: "About You" },
+  { id: "project", label: "Your Project" },
+  { id: "product", label: "Product Details" },
+  { id: "formula", label: "Formulation" },
+  { id: "pricing", label: "Pricing & MOQ" },
+  { id: "packaging", label: "Packaging" },
+  { id: "timeline", label: "Timeline & Scale" },
+  { id: "services", label: "Additional Services" },
+  { id: "review", label: "Review" },
+];
+
+const PRODUCT_TYPES = ["Gummies","Softgels","Capsules","Tablets","Powders","Liquids","Bars","Functional Candy","Jellybeans","Other"];
+const SERVICE_TYPES = [
+  { label: "Contract Manufacturing", desc: "I have a formula ready to produce" },
+  { label: "Private Label / Stock Formula", desc: "Use your proven, ready-to-go formulas" },
+  { label: "Custom Formulation", desc: "Help me develop a new product from scratch" },
+  { label: "Co-Packing Only", desc: "I supply finished product, you package it" },
+];
+const TARGET_DEMOGRAPHICS = ["Children (4\u201312)","Teens (13\u201317)","Young Adults (18\u201334)","Adults (35\u201354)","Seniors (55+)","Athletes / Fitness","Prenatal / Women's Health","Men's Health","Pet Supplements"];
+const CERTIFICATIONS = ["cGMP","NSF","Organic (USDA)","Non-GMO Project Verified","Kosher","Halal","Gluten-Free","Vegan / Vegetarian","Allergen-Free","SQF","BRC","Health Canada"];
+const PACKAGING_FORMATS = ["Bottles (HDPE)","Clear Jars","Stand-Up Pouches","Sachets / Stick Packs","Blister Packs","Bulk Bags (2kg+)","Custom Packaging","Not Sure Yet"];
+const VOLUME_RANGES = ["Pilot / R&D (<5,000 units)","Startup (5K\u201325K)","Growth (25K\u2013100K)","Scale (100K\u2013500K)","Enterprise (500K\u20131M+)"];
+const TIMELINE_OPTIONS = ["ASAP / Rush Order","1\u20133 Months","3\u20136 Months","6\u201312 Months","Just Exploring / No Rush"];
+const SALES_CHANNELS = ["Amazon","Shopify / DTC Website","Retail (Walmart, Target, GNC, etc.)","Wholesale / Distributors","Subscription Box","International Export","Not Launched Yet"];
+const ADDITIONAL_SERVICES = ["Label Design & Compliance","3D Product Renderings","Photography / Video","Flavor Development","Third-Party Testing (COA)","Warehousing & Fulfillment","Amazon Seller Setup Help","Regulatory / FDA Guidance","Sample Production"];
+const UNIT_PRICE_RANGES = ["Under $3 / unit","$3\u2013$5 / unit","$5\u2013$10 / unit","$10\u2013$20 / unit","$20\u2013$30 / unit","$30+ / unit","Not sure \u2014 help me figure this out"];
+const BUDGET_RANGES = ["Under $10,000","$10K\u2013$25K","$25K\u2013$50K","$50K\u2013$100K","$100K\u2013$250K","$250K+","Flexible \u2014 depends on quote"];
+
+function FloatingLabel({ label, name, value, onChange, type="text", required, textarea, placeholder }) {
+  const [focused, setFocused] = useState(false);
+  const active = focused || (value && value.length > 0);
+  const Tag = textarea ? "textarea" : "input";
+  return (
+    <div style={{ position:"relative", marginBottom:18 }}>
+      <Tag name={name} type={type} value={value} onChange={onChange}
+        onFocus={() => setFocused(true)} onBlur={() => setFocused(false)}
+        required={required} rows={textarea ? 4 : undefined}
+        placeholder={active ? (placeholder || "") : ""}
+        style={{
+          width:"100%", padding: textarea ? "24px 16px 10px" : "22px 16px 8px",
+          fontSize:14.5, fontFamily:"'DM Sans', sans-serif",
+          border:`1.5px solid ${focused ? "#c59a4a" : "rgba(255,255,255,0.1)"}`,
+          borderRadius:10, background: focused ? "rgba(197,154,74,0.04)" : "rgba(255,255,255,0.03)",
+          color:"#f0ece4", outline:"none", transition:"all 0.3s",
+          resize: textarea ? "vertical" : "none", minHeight: textarea ? 100 : "auto", boxSizing:"border-box",
+        }}
+      />
+      <label style={{
+        position:"absolute", left:16, top: active ? 5 : textarea ? 18 : 15,
+        fontSize: active ? 9.5 : 14.5, color: focused ? "#c59a4a" : "rgba(255,255,255,0.35)",
+        transition:"all 0.2s", pointerEvents:"none", fontFamily:"'DM Sans', sans-serif",
+        fontWeight: active ? 600 : 400, letterSpacing: active ? "0.07em" : 0,
+        textTransform: active ? "uppercase" : "none",
+      }}>{label}{required ? " *" : ""}</label>
+    </div>
+  );
+}
+
+function ChipSelect({ options, selected, onToggle, multi=true }) {
+  return (
+    <div style={{ display:"flex", flexWrap:"wrap", gap:6, marginBottom:14 }}>
+      {options.map(opt => {
+        const isActive = multi ? selected.includes(opt) : selected === opt;
+        return (
+          <button key={opt} onClick={() => onToggle(opt)} type="button" style={{
+            padding:"9px 14px", borderRadius:8,
+            border:`1.5px solid ${isActive ? "#c59a4a" : "rgba(255,255,255,0.08)"}`,
+            background: isActive ? "rgba(197,154,74,0.12)" : "rgba(255,255,255,0.02)",
+            color: isActive ? "#e8d5a3" : "rgba(255,255,255,0.5)",
+            fontSize:12.5, fontFamily:"'DM Sans', sans-serif",
+            fontWeight: isActive ? 600 : 400, textAlign:"left",
+            cursor:"pointer", transition:"all 0.2s", lineHeight:1.35,
+          }}>{isActive && multi ? "\u2713 " : ""}{opt}</button>
+        );
+      })}
+    </div>
+  );
+}
+
+function ServiceCard({ item, active, onClick }) {
+  return (
+    <button onClick={onClick} type="button" style={{
+      padding:"16px 18px", borderRadius:12, textAlign:"left",
+      border:`1.5px solid ${active ? "#c59a4a" : "rgba(255,255,255,0.07)"}`,
+      background: active ? "rgba(197,154,74,0.08)" : "rgba(255,255,255,0.015)",
+      cursor:"pointer", transition:"all 0.25s", width:"100%",
+    }}>
+      <div style={{ fontSize:14.5, fontFamily:"'DM Sans', sans-serif", fontWeight: active ? 600 : 500,
+        color: active ? "#e8d5a3" : "rgba(255,255,255,0.6)", marginBottom:4,
+      }}>{active ? "\u25CF " : "\u25CB "}{item.label}</div>
+      <div style={{ fontSize:12, fontFamily:"'DM Sans', sans-serif", color:"rgba(255,255,255,0.3)", lineHeight:1.5 }}>{item.desc}</div>
+    </button>
+  );
+}
+
+function ProgressBar({ current, total }) {
+  return (
+    <div style={{ display:"flex", gap:3, marginBottom:28 }}>
+      {Array.from({ length: total }).map((_, i) => (
+        <div key={i} style={{
+          flex:1, height:2.5, borderRadius:2,
+          background: i <= current ? "linear-gradient(90deg, #c59a4a, #e8d5a3)" : "rgba(255,255,255,0.06)",
+          transition:"background 0.4s",
+        }} />
+      ))}
+    </div>
+  );
+}
+
+function SectionLabel({ children }) {
+  return <label style={{ fontFamily:"'DM Sans', sans-serif", fontSize:10, fontWeight:600,
+    color:"rgba(255,255,255,0.35)", letterSpacing:"0.08em", textTransform:"uppercase",
+    display:"block", marginBottom:8, marginTop:6 }}>{children}</label>;
+}
+
+function SectionTitle({ children, sub }) {
+  return (
+    <div style={{ marginBottom:22 }}>
+      <h2 style={{ fontFamily:"'Playfair Display', serif", fontSize:26, fontWeight:700, color:"#f0ece4", margin:0, lineHeight:1.2 }}>{children}</h2>
+      {sub && <p style={{ fontFamily:"'DM Sans', sans-serif", fontSize:13.5, color:"rgba(255,255,255,0.4)", marginTop:8, lineHeight:1.6 }}>{sub}</p>}
+    </div>
+  );
+}
+
+function ReviewBlock({ title, items }) {
+  const filtered = items.filter(i => { if (!i.value) return false; if (Array.isArray(i.value) && i.value.length === 0) return false; return true; });
+  if (filtered.length === 0) return null;
+  return (
+    <div style={{ background:"rgba(255,255,255,0.02)", border:"1px solid rgba(255,255,255,0.05)", borderRadius:12, padding:"14px 18px", marginBottom:12 }}>
+      <div style={{ fontSize:9.5, fontWeight:600, color:"rgba(255,255,255,0.28)", letterSpacing:"0.09em", textTransform:"uppercase", fontFamily:"'DM Sans', sans-serif", marginBottom:6 }}>{title}</div>
+      {filtered.map((item, idx) => (
+        <div key={idx} style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", padding:"8px 0",
+          borderBottom: idx < filtered.length - 1 ? "1px solid rgba(255,255,255,0.04)" : "none" }}>
+          <span style={{ color:"rgba(255,255,255,0.35)", fontSize:12.5, fontFamily:"'DM Sans', sans-serif", fontWeight:500, minWidth:100 }}>{item.label}</span>
+          <span style={{ color:"#e8d5a3", fontSize:12.5, fontFamily:"'DM Sans', sans-serif", textAlign:"right", maxWidth:"58%", wordBreak:"break-word", lineHeight:1.4 }}>
+            {Array.isArray(item.value) ? item.value.join(", ") : item.value}
+          </span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function CoPackingIntake() {
+  const [step, setStep] = useState(0);
+  const [submitted, setSubmitted] = useState(false);
+  const containerRef = useRef(null);
+  const [form, setForm] = useState({
+    fullName:"", email:"", phone:"", company:"", website:"", country:"United States", referralSource:"",
+    serviceType:"", projectDescription:"",
+    productTypes:[], productName:"", targetDemographics:[], flavorPreferences:"", shapePreferences:"",
+    formulaType:"", formulaDetails:"", activeIngredients:"", certifications:[], dietaryNotes:"",
+    targetUnitPrice:"", totalBudget:"", moqPreference:"", salesChannels:[], currentMonthlyVolume:"",
+    packagingFormats:[], labelDesignNeeded:"", packagingNotes:"",
+    volumeRange:"", timeline:"", additionalNotes:"",
+    additionalServices:[], sampleRequest:"", competitorProducts:"", brandStory:"",
+  });
+
+  useEffect(() => { if (containerRef.current) containerRef.current.scrollTo({ top:0, behavior:"smooth" }); }, [step]);
+
+  const u = (f, v) => setForm(prev => ({ ...prev, [f]: v }));
+  const ta = (f, v) => setForm(prev => ({ ...prev, [f]: prev[f].includes(v) ? prev[f].filter(x => x !== v) : [...prev[f], v] }));
+
+  const canProceed = () => {
+    switch (step) {
+      case 0: return true;
+      case 1: return form.fullName && form.email && form.company;
+      case 2: return form.serviceType;
+      case 3: return form.productTypes.length > 0;
+      case 4: return true;
+      case 5: return true;
+      case 6: return true;
+      case 7: return form.volumeRange && form.timeline;
+      case 8: return true;
+      case 9: return true;
+      default: return true;
+    }
+  };
+
+  const emptyForm = { fullName:"", email:"", phone:"", company:"", website:"", country:"United States", referralSource:"",
+    serviceType:"", projectDescription:"", productTypes:[], productName:"", targetDemographics:[], flavorPreferences:"", shapePreferences:"",
+    formulaType:"", formulaDetails:"", activeIngredients:"", certifications:[], dietaryNotes:"",
+    targetUnitPrice:"", totalBudget:"", moqPreference:"", salesChannels:[], currentMonthlyVolume:"",
+    packagingFormats:[], labelDesignNeeded:"", packagingNotes:"", volumeRange:"", timeline:"", additionalNotes:"",
+    additionalServices:[], sampleRequest:"", competitorProducts:"", brandStory:"" };
+
+  const renderStep = () => {
+    switch (step) {
+      case 0: return (
+        <div style={{ textAlign:"center", padding:"32px 0" }}>
+          <div style={{ width:64, height:64, borderRadius:16, background:"linear-gradient(135deg, #c59a4a 0%, #8b6914 100%)",
+            display:"flex", alignItems:"center", justifyContent:"center", margin:"0 auto 20px", fontSize:28 }}>{"\u2697"}</div>
+          <h1 style={{ fontFamily:"'Playfair Display', serif", fontSize:32, fontWeight:700, color:"#f0ece4", margin:"0 0 10px", lineHeight:1.15 }}>Let's Build Your Product</h1>
+          <p style={{ fontFamily:"'DM Sans', sans-serif", fontSize:15, color:"rgba(255,255,255,0.45)", maxWidth:420, margin:"0 auto 8px", lineHeight:1.7 }}>
+            From concept to commercialization — share your vision and we'll craft a custom manufacturing plan with transparent pricing.
+          </p>
+          <p style={{ fontFamily:"'DM Sans', sans-serif", fontSize:12.5, color:"rgba(255,255,255,0.25)", maxWidth:380, margin:"0 auto 32px", lineHeight:1.6 }}>
+            Not sure about every detail? No problem — we'll figure it out together. Custom quotes delivered within 24–48 hours.
+          </p>
+          <div style={{ display:"grid", gridTemplateColumns:"repeat(4, 1fr)", gap:16, maxWidth:460, margin:"0 auto" }}>
+            {[{icon:"🧪",l:"Custom Formulation"},{icon:"🏭",l:"Manufacturing"},{icon:"📦",l:"Packaging"},{icon:"💰",l:"Pricing & MOQ"}].map(s => (
+              <div key={s.l} style={{ display:"flex", flexDirection:"column", alignItems:"center", gap:6 }}>
+                <div style={{ fontSize:22 }}>{s.icon}</div>
+                <span style={{ fontFamily:"'DM Sans', sans-serif", fontSize:10, color:"rgba(255,255,255,0.35)", letterSpacing:"0.06em", textTransform:"uppercase", fontWeight:500, textAlign:"center" }}>{s.l}</span>
+              </div>
+            ))}
+          </div>
+          <div style={{ marginTop:36, padding:"14px 20px", borderRadius:10, background:"rgba(197,154,74,0.06)", border:"1px solid rgba(197,154,74,0.12)", maxWidth:400, margin:"36px auto 0" }}>
+            <div style={{ fontSize:11, color:"#c59a4a", fontFamily:"'DM Sans', sans-serif", fontWeight:600, letterSpacing:"0.05em", textTransform:"uppercase", marginBottom:4 }}>What to expect</div>
+            <div style={{ fontSize:12.5, color:"rgba(255,255,255,0.4)", fontFamily:"'DM Sans', sans-serif", lineHeight:1.6 }}>
+              Fill out your project details → We review & prepare your custom quote → Schedule a call to finalize → Production begins
+            </div>
+          </div>
+        </div>
+      );
+      case 1: return (<>
+        <SectionTitle sub="We'll use this info to reach out and discuss your project.">About You</SectionTitle>
+        <FloatingLabel label="Full Name" name="fullName" value={form.fullName} onChange={e => u("fullName", e.target.value)} required />
+        <FloatingLabel label="Email Address" name="email" value={form.email} onChange={e => u("email", e.target.value)} type="email" required />
+        <FloatingLabel label="Phone Number" name="phone" value={form.phone} onChange={e => u("phone", e.target.value)} type="tel" />
+        <FloatingLabel label="Company / Brand Name" name="company" value={form.company} onChange={e => u("company", e.target.value)} required />
+        <FloatingLabel label="Website URL" name="website" value={form.website} onChange={e => u("website", e.target.value)} />
+        <SectionLabel>How did you find us?</SectionLabel>
+        <ChipSelect options={["Search Engine","Trade Show / Event","Referral","Social Media","Publication","Broker / Rep","Other"]} selected={form.referralSource} onToggle={v => u("referralSource", v)} multi={false} />
+      </>);
+      case 2: return (<>
+        <SectionTitle sub="Select the service that best fits your current stage.">What Are You Looking For?</SectionTitle>
+        <div style={{ display:"flex", flexDirection:"column", gap:8, marginBottom:20 }}>
+          {SERVICE_TYPES.map(s => <ServiceCard key={s.label} item={s} active={form.serviceType === s.label} onClick={() => u("serviceType", s.label)} />)}
+        </div>
+        <FloatingLabel label="Tell us more about your project vision..." name="projectDescription" value={form.projectDescription} onChange={e => u("projectDescription", e.target.value)} textarea placeholder="e.g. We're launching a protein gummy brand targeting Gen Z fitness enthusiasts..." />
+      </>);
+      case 3: return (<>
+        <SectionTitle sub="Select all product formats you're interested in. We can produce multiple SKUs.">Product Details</SectionTitle>
+        <SectionLabel>Product Type(s) *</SectionLabel>
+        <ChipSelect options={PRODUCT_TYPES} selected={form.productTypes} onToggle={v => ta("productTypes", v)} />
+        <FloatingLabel label="Product / Brand Name" name="productName" value={form.productName} onChange={e => u("productName", e.target.value)} />
+        <SectionLabel>Target Consumer</SectionLabel>
+        <ChipSelect options={TARGET_DEMOGRAPHICS} selected={form.targetDemographics} onToggle={v => ta("targetDemographics", v)} />
+        <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:10 }}>
+          <FloatingLabel label="Flavor Preferences" name="flavorPreferences" value={form.flavorPreferences} onChange={e => u("flavorPreferences", e.target.value)} placeholder="e.g. Berry, Citrus, Tropical" />
+          <FloatingLabel label="Shape / Form Factor" name="shapePreferences" value={form.shapePreferences} onChange={e => u("shapePreferences", e.target.value)} placeholder="e.g. Bears, Stars, Custom" />
+        </div>
+        <FloatingLabel label="Competitor products to reference (optional)" name="competitorProducts" value={form.competitorProducts} onChange={e => u("competitorProducts", e.target.value)} placeholder="e.g. OLLY, SmartyPants, LMNT" />
+      </>);
+      case 4: return (<>
+        <SectionTitle sub="Share your formula or tell us what you need help developing.">Formulation</SectionTitle>
+        <SectionLabel>Formula Status</SectionLabel>
+        <ChipSelect options={["I have a complete formula","I have a partial concept","I need R&D help","I want a stock / private label formula"]} selected={form.formulaType} onToggle={v => u("formulaType", v)} multi={false} />
+        <FloatingLabel label="Paste your formula or describe your concept..." name="formulaDetails" value={form.formulaDetails} onChange={e => u("formulaDetails", e.target.value)} textarea placeholder="Include ingredient names, dosages, and any spec sheets if possible" />
+        <FloatingLabel label="Key Active Ingredients" name="activeIngredients" value={form.activeIngredients} onChange={e => u("activeIngredients", e.target.value)} placeholder="e.g. Whey Protein Isolate, Vitamin D3, Ashwagandha" />
+        <SectionLabel>Required Certifications</SectionLabel>
+        <ChipSelect options={CERTIFICATIONS} selected={form.certifications} onToggle={v => ta("certifications", v)} />
+        <FloatingLabel label="Dietary / Allergen Notes" name="dietaryNotes" value={form.dietaryNotes} onChange={e => u("dietaryNotes", e.target.value)} placeholder="e.g. Sugar-free, low-calorie, nut-free, Prop 65 compliant" />
+      </>);
+      case 5: return (<>
+        <SectionTitle sub="Help us understand your pricing goals so we can right-size your production plan.">Pricing & Budget</SectionTitle>
+        <SectionLabel>Target Unit Cost (COGS per unit)</SectionLabel>
+        <ChipSelect options={UNIT_PRICE_RANGES} selected={form.targetUnitPrice} onToggle={v => u("targetUnitPrice", v)} multi={false} />
+        <div style={{ padding:"10px 14px", borderRadius:8, background:"rgba(197,154,74,0.04)", border:"1px solid rgba(197,154,74,0.08)", marginBottom:18, marginTop:-4 }}>
+          <div style={{ fontSize:11.5, color:"rgba(255,255,255,0.35)", fontFamily:"'DM Sans', sans-serif", lineHeight:1.55 }}>
+            <span style={{ color:"#c59a4a", fontWeight:600 }}>Typical ranges:</span> Stock private label $4–$20/unit · Custom formulations $5–$30/unit · Includes bottling, seals, testing, and application. Labels, shipping, and marketing are additional.
+          </div>
+        </div>
+        <SectionLabel>Total Project Budget (first production run)</SectionLabel>
+        <ChipSelect options={BUDGET_RANGES} selected={form.totalBudget} onToggle={v => u("totalBudget", v)} multi={false} />
+        <FloatingLabel label="MOQ Preference" name="moqPreference" value={form.moqPreference} onChange={e => u("moqPreference", e.target.value)} placeholder="e.g. 5,000 bottles, 300K pieces, open to recommendation" />
+        <div style={{ padding:"10px 14px", borderRadius:8, background:"rgba(255,255,255,0.02)", border:"1px solid rgba(255,255,255,0.06)", marginBottom:18, marginTop:-4 }}>
+          <div style={{ fontSize:11.5, color:"rgba(255,255,255,0.3)", fontFamily:"'DM Sans', sans-serif", lineHeight:1.55 }}>
+            <span style={{ color:"rgba(255,255,255,0.5)", fontWeight:600 }}>Typical MOQs:</span> Stock products: 2,500–5,000 bottles · Custom capsules/tablets: 150K–300K pcs · Custom gummies: 600K–1M pcs · Softgels: 300K pcs
+          </div>
+        </div>
+        <SectionLabel>Where will you sell? (sales channels)</SectionLabel>
+        <ChipSelect options={SALES_CHANNELS} selected={form.salesChannels} onToggle={v => ta("salesChannels", v)} />
+        <FloatingLabel label="Current Monthly Volume (if existing brand)" name="currentMonthlyVolume" value={form.currentMonthlyVolume} onChange={e => u("currentMonthlyVolume", e.target.value)} placeholder="e.g. 10,000 units/month, or N/A for new brands" />
+      </>);
+      case 6: return (<>
+        <SectionTitle sub="How should your finished product look on the shelf?">Packaging & Labeling</SectionTitle>
+        <SectionLabel>Packaging Format(s)</SectionLabel>
+        <ChipSelect options={PACKAGING_FORMATS} selected={form.packagingFormats} onToggle={v => ta("packagingFormats", v)} />
+        <SectionLabel>Label / Graphic Design Status</SectionLabel>
+        <ChipSelect options={["I need full design from scratch","I have print-ready artwork","I need modifications to existing design","Not sure yet"]} selected={form.labelDesignNeeded} onToggle={v => u("labelDesignNeeded", v)} multi={false} />
+        <FloatingLabel label="Packaging notes or special requirements..." name="packagingNotes" value={form.packagingNotes} onChange={e => u("packagingNotes", e.target.value)} textarea placeholder="e.g. Child-resistant caps, tamper-evident seals, custom bottle shape, sustainability preferences" />
+      </>);
+      case 7: return (<>
+        <SectionTitle sub="Let us plan capacity and raw material procurement around your schedule.">Timeline & Scale</SectionTitle>
+        <SectionLabel>Initial Order Volume *</SectionLabel>
+        <ChipSelect options={VOLUME_RANGES} selected={form.volumeRange} onToggle={v => u("volumeRange", v)} multi={false} />
+        <SectionLabel>Target Launch Date *</SectionLabel>
+        <ChipSelect options={TIMELINE_OPTIONS} selected={form.timeline} onToggle={v => u("timeline", v)} multi={false} />
+        <div style={{ padding:"10px 14px", borderRadius:8, background:"rgba(255,255,255,0.02)", border:"1px solid rgba(255,255,255,0.06)", marginBottom:18, marginTop:-4 }}>
+          <div style={{ fontSize:11.5, color:"rgba(255,255,255,0.3)", fontFamily:"'DM Sans', sans-serif", lineHeight:1.55 }}>
+            <span style={{ color:"rgba(255,255,255,0.5)", fontWeight:600 }}>Typical lead times:</span> Stock products: 2–4 weeks from label receipt · Custom formulations: 8–12 weeks · Rush orders available with premium pricing
+          </div>
+        </div>
+        <FloatingLabel label="Anything else about your timeline or scale?" name="additionalNotes" value={form.additionalNotes} onChange={e => u("additionalNotes", e.target.value)} textarea placeholder="e.g. Seasonal launch window, trade show deadline, retail buyer presentation date" />
+      </>);
+      case 8: return (<>
+        <SectionTitle sub="Select any extra services you need. We're a full turnkey partner.">Additional Services</SectionTitle>
+        <SectionLabel>What else can we help with?</SectionLabel>
+        <ChipSelect options={ADDITIONAL_SERVICES} selected={form.additionalServices} onToggle={v => ta("additionalServices", v)} />
+        <SectionLabel>Would you like samples?</SectionLabel>
+        <ChipSelect options={["Yes — send me samples of similar products","Yes — I want a prototype of my formula","Not right now"]} selected={form.sampleRequest} onToggle={v => u("sampleRequest", v)} multi={false} />
+        <FloatingLabel label="Your brand story (optional — helps us understand your vision)" name="brandStory" value={form.brandStory} onChange={e => u("brandStory", e.target.value)} textarea placeholder="What's the mission behind your brand? Who are you trying to serve and why?" />
+      </>);
+      case 9: return (<>
+        <SectionTitle sub="Double-check your details. We'll respond with a custom quote within 24–48 hours.">Review & Submit</SectionTitle>
+        <ReviewBlock title="Contact Information" items={[
+          {label:"Name",value:form.fullName},{label:"Email",value:form.email},{label:"Phone",value:form.phone},
+          {label:"Company",value:form.company},{label:"Website",value:form.website},{label:"Found via",value:form.referralSource},
+        ]} />
+        <ReviewBlock title="Project Overview" items={[
+          {label:"Service",value:form.serviceType},{label:"Description",value:form.projectDescription},
+          {label:"Product Types",value:form.productTypes},{label:"Product Name",value:form.productName},
+          {label:"Demographics",value:form.targetDemographics},{label:"Flavors",value:form.flavorPreferences},
+          {label:"Shapes",value:form.shapePreferences},{label:"Competitors",value:form.competitorProducts},
+        ]} />
+        <ReviewBlock title="Formulation" items={[
+          {label:"Formula Status",value:form.formulaType},{label:"Active Ingredients",value:form.activeIngredients},
+          {label:"Certifications",value:form.certifications},{label:"Dietary Notes",value:form.dietaryNotes},
+        ]} />
+        <ReviewBlock title="Pricing & Budget" items={[
+          {label:"Target Unit Cost",value:form.targetUnitPrice},{label:"Project Budget",value:form.totalBudget},
+          {label:"MOQ Preference",value:form.moqPreference},{label:"Sales Channels",value:form.salesChannels},
+          {label:"Current Volume",value:form.currentMonthlyVolume},
+        ]} />
+        <ReviewBlock title="Packaging & Timeline" items={[
+          {label:"Packaging",value:form.packagingFormats},{label:"Label Design",value:form.labelDesignNeeded},
+          {label:"Order Volume",value:form.volumeRange},{label:"Timeline",value:form.timeline},
+        ]} />
+        <ReviewBlock title="Additional Services" items={[
+          {label:"Services",value:form.additionalServices},{label:"Samples",value:form.sampleRequest},
+        ]} />
+        {(form.formulaDetails || form.packagingNotes || form.additionalNotes || form.brandStory) && (
+          <div style={{ marginTop:8, padding:"12px 16px", borderRadius:10, background:"rgba(197,154,74,0.04)", border:"1px solid rgba(197,154,74,0.08)" }}>
+            <div style={{ fontSize:9.5, fontWeight:600, color:"#c59a4a", letterSpacing:"0.08em", textTransform:"uppercase", fontFamily:"'DM Sans', sans-serif", marginBottom:4 }}>Notes included</div>
+            <div style={{ fontSize:12, color:"rgba(255,255,255,0.35)", fontFamily:"'DM Sans', sans-serif", lineHeight:1.5 }}>
+              {[form.formulaDetails && "Formula details", form.packagingNotes && "Packaging notes", form.additionalNotes && "Timeline notes", form.brandStory && "Brand story"].filter(Boolean).join(" · ")}
+            </div>
+          </div>
+        )}
+      </>);
+      default: return null;
+    }
+  };
+
+  if (submitted) {
+    return (
+      <div style={{ minHeight:"100vh", background:"linear-gradient(165deg, #0d0b09 0%, #1a1510 40%, #0d0b09 100%)",
+        display:"flex", alignItems:"center", justifyContent:"center", fontFamily:"'DM Sans', sans-serif" }}>
+        <div style={{ textAlign:"center", padding:40, maxWidth:460 }}>
+          <div style={{ width:72, height:72, borderRadius:"50%", background:"linear-gradient(135deg, #2a6b3f 0%, #1a4d2b 100%)",
+            display:"flex", alignItems:"center", justifyContent:"center", margin:"0 auto 20px", fontSize:32 }}>✓</div>
+          <h1 style={{ fontFamily:"'Playfair Display', serif", fontSize:30, fontWeight:700, color:"#f0ece4", margin:"0 0 10px" }}>Quote Request Submitted</h1>
+          <p style={{ color:"rgba(255,255,255,0.45)", fontSize:14.5, lineHeight:1.7, marginBottom:6 }}>
+            Thank you, {form.fullName.split(" ")[0]}. Our team will review your project and prepare a detailed quote with pricing breakdown.
+          </p>
+          <p style={{ color:"rgba(255,255,255,0.3)", fontSize:13, lineHeight:1.6 }}>
+            Expect to hear from us within 24–48 business hours. We'll schedule a call to walk through your quote and discuss next steps.
+          </p>
+          <button onClick={() => { setSubmitted(false); setStep(0); setForm(emptyForm); }} style={{
+            marginTop:28, padding:"12px 24px", borderRadius:100, border:"1px solid rgba(255,255,255,0.1)",
+            background:"transparent", color:"rgba(255,255,255,0.4)", fontSize:13, fontFamily:"'DM Sans', sans-serif", cursor:"pointer" }}>Submit Another Project</button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ minHeight:"100vh", background:"linear-gradient(165deg, #0d0b09 0%, #1a1510 40%, #0d0b09 100%)",
+      display:"flex", flexDirection:"column", alignItems:"center", fontFamily:"'DM Sans', sans-serif" }}>
+      <div style={{ position:"fixed", top:0, left:0, right:0, height:2,
+        background:"linear-gradient(90deg, transparent, #c59a4a, transparent)", opacity:0.5, zIndex:100 }} />
+      <header style={{ width:"100%", maxWidth:600, padding:"24px 20px 0", display:"flex", justifyContent:"space-between", alignItems:"center" }}>
+        <div style={{ display:"flex", alignItems:"center", gap:10 }}>
+          <div style={{ width:30, height:30, borderRadius:8, background:"linear-gradient(135deg, #c59a4a, #8b6914)",
+            display:"flex", alignItems:"center", justifyContent:"center", fontSize:15, fontWeight:700, color:"#0d0b09" }}>⚗</div>
+          <span style={{ fontFamily:"'Playfair Display', serif", fontSize:15, fontWeight:600, color:"#f0ece4" }}>Project Intake</span>
+        </div>
+        {step > 0 && <span style={{ fontSize:10.5, color:"rgba(255,255,255,0.25)", fontWeight:500, letterSpacing:"0.06em", textTransform:"uppercase" }}>Step {step} of {STEPS.length - 1}</span>}
+      </header>
+      <main ref={containerRef} style={{ width:"100%", maxWidth:600, padding:"16px 20px 130px", flex:1, overflowY:"auto" }}>
+        {step > 0 && <ProgressBar current={step - 1} total={STEPS.length - 2} />}
+        {renderStep()}
+      </main>
+      <div style={{ position:"fixed", bottom:0, left:0, right:0, background:"linear-gradient(transparent, #0d0b09 30%)", padding:"28px 20px 22px", display:"flex", justifyContent:"center" }}>
+        <div style={{ width:"100%", maxWidth:600, display:"flex", gap:10 }}>
+          {step > 0 && (
+            <button onClick={() => setStep(s => s - 1)} style={{
+              padding:"13px 22px", borderRadius:100, border:"1px solid rgba(255,255,255,0.08)",
+              background:"rgba(255,255,255,0.02)", color:"rgba(255,255,255,0.4)", fontSize:13.5,
+              fontFamily:"'DM Sans', sans-serif", fontWeight:500, cursor:"pointer", transition:"all 0.2s" }}>← Back</button>
+          )}
+          <button onClick={() => { if (step === STEPS.length - 1) setSubmitted(true); else setStep(s => s + 1); }}
+            disabled={!canProceed()} style={{
+              flex:1, padding:"13px 24px", borderRadius:100, border:"none",
+              background: canProceed() ? "linear-gradient(135deg, #c59a4a 0%, #a67c2e 100%)" : "rgba(255,255,255,0.05)",
+              color: canProceed() ? "#0d0b09" : "rgba(255,255,255,0.15)",
+              fontSize:14.5, fontFamily:"'DM Sans', sans-serif", fontWeight:600,
+              cursor: canProceed() ? "pointer" : "not-allowed", transition:"all 0.3s", letterSpacing:"0.02em" }}>
+            {step === 0 ? "Get Started →" : step === STEPS.length - 1 ? "Submit Quote Request" : "Continue →"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<CoPackingIntake />);
+</script>
+</body>
+</html>
