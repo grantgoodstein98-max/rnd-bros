@@ -204,6 +204,22 @@ function CoPackingIntake() {
     }
   };
 
+  const SHEET_URL = "https://script.google.com/macros/s/AKfycbxfj6UY-u4GmB22lB4ddoVq9s5ITg2SMHRMLVGOUvHl9Rv1NlPLj_f9zhlFQ9hNkIEg/exec";
+
+  const handleSubmit = async () => {
+    try {
+      await fetch(SHEET_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+    } catch (err) {
+      console.error("Submission error:", err);
+    }
+    setSubmitted(true);
+  };
+
   const emptyForm = { fullName:"", email:"", phone:"", company:"", website:"", country:"United States", referralSource:"",
     serviceType:"", projectDescription:"", productTypes:[], productName:"", targetDemographics:[], flavorPreferences:"", shapePreferences:"",
     formulaType:"", formulaDetails:"", activeIngredients:"", certifications:[], dietaryNotes:"",
@@ -418,7 +434,7 @@ function CoPackingIntake() {
               background:"rgba(255,255,255,0.02)", color:"rgba(255,255,255,0.4)", fontSize:13.5,
               fontFamily:"'DM Sans', sans-serif", fontWeight:500, cursor:"pointer", transition:"all 0.2s" }}>← Back</button>
           )}
-          <button onClick={() => { if (step === STEPS.length - 1) setSubmitted(true); else setStep(s => s + 1); }}
+          <button onClick={() => { if (step === STEPS.length - 1) handleSubmit(); else setStep(s => s + 1); }}
             disabled={!canProceed()} style={{
               flex:1, padding:"13px 24px", borderRadius:100, border:"none",
               background: canProceed() ? "linear-gradient(135deg, #c59a4a 0%, #a67c2e 100%)" : "rgba(255,255,255,0.05)",
