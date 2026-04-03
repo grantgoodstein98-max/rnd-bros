@@ -338,6 +338,28 @@ body {
 .ingredient-note {
   font-size: 13px; color: var(--muted); line-height: 1.5;
 }
+/* === INGREDIENT ACCORDION === */
+.ingredient-card.expandable { cursor: pointer; }
+.ingredient-card.expandable .ingredient-name {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+}
+.ingredient-expand-icon {
+  font-size: 18px; font-weight: 300; color: var(--accent);
+  flex-shrink: 0; transition: transform 0.3s; line-height: 1;
+  font-style: normal; font-family: var(--sans);
+}
+.ingredient-card.expandable.open .ingredient-expand-icon {
+  transform: rotate(45deg);
+}
+.ingredient-description {
+  max-height: 0; overflow: hidden;
+  transition: max-height 0.35s ease, opacity 0.3s ease, margin-top 0.3s ease;
+  opacity: 0; margin-top: 0;
+  font-size: 13.5px; color: var(--muted); line-height: 1.65;
+}
+.ingredient-card.expandable.open .ingredient-description {
+  max-height: 200px; opacity: 1; margin-top: 10px;
+}
 .ingredients-footer {
   margin-top: 48px; text-align: center;
 }
@@ -349,6 +371,44 @@ body {
   transition: color 0.3s;
 }
 .ingredients-footer a:hover { color: var(--accent-light); }
+
+/* === FREE QUOTE CALLOUT === */
+.free-quote-callout {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 24px; flex-wrap: wrap;
+  background: var(--forest); color: #fff;
+  border-radius: 16px; padding: 28px 36px;
+  margin-bottom: 48px;
+}
+.free-quote-callout-left {
+  display: flex; align-items: center; gap: 20px;
+}
+.free-quote-callout-icon {
+  font-size: 36px; flex-shrink: 0;
+}
+.free-quote-callout-text {}
+.free-quote-callout-headline {
+  font-family: var(--serif); font-size: 24px; font-weight: 400;
+  line-height: 1.2; margin-bottom: 4px;
+  color: #fff;
+}
+.free-quote-callout-sub {
+  font-size: 14px; color: rgba(255,255,255,0.7); line-height: 1.5;
+}
+.free-quote-callout-badges {
+  display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
+}
+.free-quote-badge {
+  font-size: 12px; font-weight: 700; letter-spacing: 0.06em;
+  text-transform: uppercase; padding: 6px 14px; border-radius: 100px;
+  white-space: nowrap;
+}
+.free-quote-badge.primary {
+  background: #fff; color: var(--forest);
+}
+.free-quote-badge.outline {
+  border: 1.5px solid rgba(255,255,255,0.4); color: rgba(255,255,255,0.85);
+}
 
 /* === TRANSPARENCY === */
 .transparency-section { padding: 100px 0; }
@@ -401,7 +461,7 @@ body {
 
 /* === PRICING TIERS === */
 .pricing-tiers {
-  display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px;
   margin-top: 48px;
 }
 .tier-card {
@@ -713,7 +773,8 @@ details[open] .faq-toggle { transform: rotate(45deg); }
   .footer-inner { flex-direction: column; gap: 24px; text-align: center; }
   .footer-right { text-align: center; }
   .ingredients-grid { grid-template-columns: repeat(2, 1fr); }
-  .pricing-tiers { grid-template-columns: 1fr; max-width: 480px; margin-left: auto; margin-right: auto; }
+  .pricing-tiers { grid-template-columns: repeat(2, 1fr); max-width: 100%; }
+  .pricing-tiers .tier-card:first-child { grid-column: 1 / -1; max-width: 480px; margin: 0 auto; width: 100%; }
   .team-grid { grid-template-columns: 1fr; max-width: 480px; }
   .moq-stats-row { grid-template-columns: 1fr; gap: 24px; }
 }
@@ -881,47 +942,54 @@ details[open] .faq-toggle { transform: rotate(45deg); }
       <p class="section-sub">We've formulated with hundreds of actives — from proven bestsellers to novel compounds. If it can go in a gummy, we've likely worked with it.</p>
     </div>
     <div class="ingredients-grid">
-      <div class="ingredient-card">
+      <div class="ingredient-card expandable">
         <div class="ingredient-icon">🌿</div>
-        <div class="ingredient-name">Ashwagandha (KSM-66® &amp; Sensoril®)</div>
+        <div class="ingredient-name">Ashwagandha (KSM-66® &amp; Sensoril®) <span class="ingredient-expand-icon">+</span></div>
         <div class="ingredient-tag">Adaptogen</div>
         <div class="ingredient-note">Bitter masking solved — our gummies taste clean, not earthy.</div>
+        <div class="ingredient-description">Ashwagandha is an adaptogenic herb used to help the body manage stress and regulate cortisol levels. It supports a calm, balanced mood and has been studied for its effects on anxiety reduction and physical endurance. KSM-66® and Sensoril® are the two most clinically validated extracts on the market.</div>
       </div>
-      <div class="ingredient-card">
+      <div class="ingredient-card expandable">
         <div class="ingredient-icon">🍄</div>
-        <div class="ingredient-name">Lion's Mane Extract</div>
+        <div class="ingredient-name">Lion's Mane Extract <span class="ingredient-expand-icon">+</span></div>
         <div class="ingredient-tag">Functional Mushroom</div>
         <div class="ingredient-note">Stability-tested for active hericenone retention through shelf life.</div>
+        <div class="ingredient-description">Lion's Mane is a functional mushroom prized for its ability to support cognitive function, memory, and focus. It contains hericenones and erinacines — compounds studied for their role in stimulating nerve growth factor (NGF), which supports brain plasticity and long-term neurological health.</div>
       </div>
-      <div class="ingredient-card">
+      <div class="ingredient-card expandable">
         <div class="ingredient-icon">🌸</div>
-        <div class="ingredient-name">Rhodiola Rosea</div>
+        <div class="ingredient-name">Rhodiola Rosea <span class="ingredient-expand-icon">+</span></div>
         <div class="ingredient-tag">Adaptogen</div>
         <div class="ingredient-note">Standardized to 3% rosavins — we source and verify every lot.</div>
+        <div class="ingredient-description">Rhodiola Rosea is an adaptogen traditionally used to combat fatigue, improve mental performance under stress, and support mood stability. Its active compounds, rosavins and salidroside, have been studied for their effects on physical endurance and resilience to burnout.</div>
       </div>
-      <div class="ingredient-card">
+      <div class="ingredient-card expandable">
         <div class="ingredient-icon">🧠</div>
-        <div class="ingredient-name">L-Theanine</div>
+        <div class="ingredient-name">L-Theanine <span class="ingredient-expand-icon">+</span></div>
         <div class="ingredient-tag">Amino Acid</div>
         <div class="ingredient-note">Pairs cleanly with ashwagandha for a natural calm + focus stack.</div>
+        <div class="ingredient-description">L-Theanine is an amino acid found naturally in green tea that promotes relaxed alertness without causing drowsiness. It works synergistically with other actives to take the edge off stimulants and support a calm, focused mental state — making it a staple in stress and cognitive support formulations.</div>
       </div>
-      <div class="ingredient-card">
+      <div class="ingredient-card expandable">
         <div class="ingredient-icon">💤</div>
-        <div class="ingredient-name">Melatonin</div>
+        <div class="ingredient-name">Melatonin <span class="ingredient-expand-icon">+</span></div>
         <div class="ingredient-tag">Sleep Support</div>
         <div class="ingredient-note">Precise micro-dosing (0.5mg–5mg) with validated label accuracy.</div>
+        <div class="ingredient-description">Melatonin is the body's primary sleep-regulating hormone, signaling the brain that it's time to wind down. In supplement form it's used to support sleep onset, reduce jet lag, and improve overall sleep quality. Precise dosing is critical — effective doses range from 0.5mg to 5mg and label accuracy must be verified by COA.</div>
       </div>
-      <div class="ingredient-card">
+      <div class="ingredient-card expandable">
         <div class="ingredient-icon">💊</div>
-        <div class="ingredient-name">Magnesium Glycinate</div>
+        <div class="ingredient-name">Magnesium Glycinate <span class="ingredient-expand-icon">+</span></div>
         <div class="ingredient-tag">Mineral</div>
         <div class="ingredient-note">High-absorption form without the texture compromise.</div>
+        <div class="ingredient-description">Magnesium Glycinate is a highly bioavailable form of magnesium — bonded to the amino acid glycine for superior absorption and minimal digestive side effects. It supports muscle relaxation, quality sleep, and nervous system function, and is widely used in recovery, stress, and sleep-focused formulations.</div>
       </div>
-      <div class="ingredient-card">
+      <div class="ingredient-card expandable">
         <div class="ingredient-icon">⚡</div>
-        <div class="ingredient-name">B-Vitamin Complex</div>
+        <div class="ingredient-name">B-Vitamin Complex <span class="ingredient-expand-icon">+</span></div>
         <div class="ingredient-tag">Energy Support</div>
         <div class="ingredient-note">Color-stable formulations that won't turn your gummy brown.</div>
+        <div class="ingredient-description">B-Vitamins (B6, B9, B12 and others) are essential co-factors in cellular energy metabolism, red blood cell production, and neurological function. They're among the most popular actives in energy and wellness gummies. The formulation challenge is color stability — high-dose B-vitamins can discolor gummies over time, which we've solved.</div>
       </div>
       <div class="ingredient-card novel">
         <div class="ingredient-icon">🔬</div>
@@ -988,6 +1056,23 @@ details[open] .faq-toggle { transform: rotate(45deg); }
       <h2 class="section-title">No surprises.<br><em>No delays.</em></h2>
       <p class="section-sub">The two biggest frustrations in supplement manufacturing are hidden costs and missed deadlines. We've eliminated both.</p>
     </div>
+
+    <!-- FREE QUOTE CALLOUT -->
+    <div class="free-quote-callout">
+      <div class="free-quote-callout-left">
+        <div class="free-quote-callout-icon">🎯</div>
+        <div class="free-quote-callout-text">
+          <div class="free-quote-callout-headline">Pricing out your project is completely free.</div>
+          <div class="free-quote-callout-sub">No contracts. No commitments. Get a detailed quote and real timeline before you spend a single dollar.</div>
+        </div>
+      </div>
+      <div class="free-quote-callout-badges">
+        <span class="free-quote-badge primary">Free Quote</span>
+        <span class="free-quote-badge outline">No Contract</span>
+        <span class="free-quote-badge outline">No Commitment</span>
+      </div>
+    </div>
+
     <div class="transp-grid">
       <div class="transp-card pricing">
         <div class="transp-card-icon">💰</div>
@@ -1017,12 +1102,29 @@ details[open] .faq-toggle { transform: rotate(45deg); }
 
     <!-- PRICING TIERS -->
     <div class="pricing-tiers">
+      <!-- Tier 0: Formula Creation Only -->
+      <div class="tier-card">
+        <div class="tier-label">Formula Creation</div>
+        <div class="tier-subtitle">No samples included</div>
+        <div class="tier-stat">Formula files only</div>
+        <div class="tier-investment">$2,500+</div>
+        <hr class="tier-divider">
+        <div class="tier-includes">What's included</div>
+        <ul class="tier-list">
+          <li>Custom formula development &amp; finalization</li>
+          <li>Formula files are yours to keep</li>
+          <li>No production run required</li>
+        </ul>
+        <p style="font-size:13.5px;color:var(--muted);line-height:1.6;margin-bottom:24px;">Get your custom formula developed and finalized without committing to a full production run. Perfect for entrepreneurs who want to validate their formula before investing in samples or inventory. Formula files are yours to keep.</p>
+        <a href="/intake.html" class="tier-cta">Start with formula →</a>
+      </div>
+
       <!-- Tier 1: Pilot -->
       <div class="tier-card">
         <div class="tier-label">Pilot Run</div>
         <div class="tier-subtitle">Test before you scale</div>
         <div class="tier-stat">From 100 units</div>
-        <div class="tier-investment">From $8,000–$14,000</div>
+        <div class="tier-investment">$5,000+</div>
         <hr class="tier-divider">
         <div class="tier-includes">What's included</div>
         <ul class="tier-list">
@@ -1041,7 +1143,7 @@ details[open] .faq-toggle { transform: rotate(45deg); }
         <div class="tier-label">Growth Run</div>
         <div class="tier-subtitle">Ready to launch</div>
         <div class="tier-stat">5,000–10,000 units</div>
-        <div class="tier-investment">$18,000–$35,000</div>
+        <div class="tier-investment">$10,000+</div>
         <hr class="tier-divider">
         <div class="tier-includes">What's included</div>
         <ul class="tier-list">
@@ -1381,6 +1483,13 @@ document.addEventListener('DOMContentLoaded', () => {
     el.style.transform = 'translateY(24px)';
     el.style.transition = `opacity 0.6s ease ${i % 5 * 0.08}s, transform 0.6s ease ${i % 5 * 0.08}s`;
     observer.observe(el);
+  });
+
+  // Ingredient accordion
+  document.querySelectorAll('.ingredient-card.expandable').forEach(card => {
+    card.addEventListener('click', () => {
+      card.classList.toggle('open');
+    });
   });
 
   // Smooth scroll for anchor links
